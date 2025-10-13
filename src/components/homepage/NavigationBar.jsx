@@ -66,7 +66,8 @@ const NavigationBar = () => {
 
                 {/* CropGenBot */}
                 <div className="flex flex-col items-center justify-center text-white text-sm">
-                    <div className="text-xl mb-1 cursor-pointer">
+                    <div className="text-xl mb-1 cursor-pointer"
+                        onClick={() => navigate("/cropgen-bot")}>
                         <CropGenBot />
                     </div>
                     <p className="text-xs md:text-sm">{t("cropGenBot")}</p>

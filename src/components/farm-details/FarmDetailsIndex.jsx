@@ -52,21 +52,21 @@ const FarmDetailsIndex = () => {
                         <button
                             key={idx}
                             onClick={() => setSelectedDate(item.date)}
-                            className={`flex flex-col items-center justify-center rounded-4xl px-4 py-2 border min-w-[130px] sm:min-w-[140px] cursor-pointer transition-all duration-500 ease-in-out ${
+                            className={`flex flex-col items-center justify-center rounded-4xl px-3 py-1 sm:px-4 sm:py-2 border min-w-[110px] sm:min-w-[130px] cursor-pointer transition-all duration-500 ease-in-out ${
                                 isSelected ? "bg-white border-white" : "bg-[#0A796F] border-[#D9D9D9]"
                             }`} >
                             <div className="flex items-center gap-1 whitespace-nowrap">
                                 <img
                                     src={isSelected ? CalendarGreen : CalendarWhite}
                                     alt="calendar"
-                                    className="w-4 h-4 sm:w-6 sm:h-6"
+                                    className="w-4 h-4 sm:w-5 sm:h-5"
                                 />
-                                <span className={`text-xs sm:text-sm font-semibold ${isSelected ? "text-[#075A53]" : "text-[#fff]"}`}>
+                                <span className={`text-[10px] sm:text-xs font-semibold ${isSelected ? "text-[#075A53]" : "text-[#fff]"}`}>
                                     {formatDate(item.date)}
                                 </span>
                             </div>
 
-                            <span className={`text-[10px] sm:text-xs font-semibold mt-1 ${isSelected ? "text-[#075A53]" : "text-[#D9D9D9]"}`}>
+                            <span className={`text-[8px] sm:text-[10px] font-semibold mt-1 ${isSelected ? "text-[#075A53]" : "text-[#D9D9D9]"}`}>
                                 {item.cloud_cover}% Cloud
                             </span>
                         </button>

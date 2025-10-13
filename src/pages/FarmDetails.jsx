@@ -6,6 +6,11 @@ import FarmDetailsCropInfo from '../components/farm-details/FarmDetailsCropInfo'
 import FarmAdvisory from '../components/farm-details/FarmAdvisory';
 import FarmDetailsSoilHealth from '../components/farm-details/FarmSoilHealth';
 import FarmDetailsMoistureTemperature from '../components/farm-details/FarmDetailsMoistureTemperature';
+import FarmDetailsWeatherCard from '../components/farm-details/FarmDetailsWeatherCard';
+import FarmDetailsGrowthTimeline from '../components/farm-details/FarmDetailsGrowthTimeline';
+import FarmDetailsCropProtection from '../components/farm-details/FarmDetailsCropProtection';
+import FarmDetailsMarketPrice from '../components/farm-details/FarmDetailsMarketPrice';
+import FarmDetailsCommunity from '../components/farm-details/FarmDetailsCommunity';
 
 const MemoizedFarmDetailsHeader = memo(FarmDetailsHeader);
 const MemoizedFarmDetailsCropHealth = memo(FarmDetailsCropHealth);
@@ -13,7 +18,11 @@ const MemoizedFarmDetailsCropInfo = memo(FarmDetailsCropInfo);
 const MemoizedFarmAdvisory = memo(FarmAdvisory);
 const MemoizedFarmDetailsSoilHealth = memo(FarmDetailsSoilHealth);
 const MemoizedMoistureTemperature = memo(FarmDetailsMoistureTemperature);
-
+const MemoizedFarmDetailsWeatherCard = memo(FarmDetailsWeatherCard);
+const MemoizedFarmDetailsGrowthTimeline = memo(FarmDetailsGrowthTimeline);
+const MemoizedFarmDetailsCropProtection = memo(FarmDetailsCropProtection)
+const MemoizedFarmDetailsMarketPrice = memo(FarmDetailsMarketPrice);
+const MemoizedFarmDetailsCommunity = memo(FarmDetailsCommunity);
 
 
 function FarmDetails() {
@@ -26,6 +35,11 @@ function FarmDetails() {
                 <MemoizedFarmAdvisory />
                 <MemoizedFarmDetailsSoilHealth />
                 <MemoizedMoistureTemperature />
+                <MemoizedFarmDetailsWeatherCard />
+                <MemoizedFarmDetailsGrowthTimeline />
+                <MemoizedFarmDetailsCropProtection />
+                <MemoizedFarmDetailsMarketPrice />
+                <MemoizedFarmDetailsCommunity />
             </div>
         </div>
     )
