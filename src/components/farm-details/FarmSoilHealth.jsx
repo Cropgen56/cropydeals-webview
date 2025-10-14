@@ -17,12 +17,10 @@ const MOCK_FERT_PLAN = {
 const FarmDetailsSoilHealth = () => {
     return (
         <section className="bg-white rounded-xl border border-[#E6EEF0] md:px-8 p-4 flex flex-col gap-4">
-            {/* Heading */}
             <h2 className="text-base sm:text-xl font-bold text-[#075A53]">
-                Soil Analysis (Based on BBCH Growth Stage)
+                Soil Heath
             </h2>
 
-            {/* Legend */}
             <div className="flex justify-end gap-4 text-xs text-gray-500">
                 <div className="flex items-center gap-1">
                     <div className="w-3.5 h-3.5 rounded bg-[#36A534]" />
@@ -34,7 +32,6 @@ const FarmDetailsSoilHealth = () => {
                 </div>
             </div>
 
-            {/* Nutrient Bars */}
             <div className="flex flex-col gap-4">
                 {MOCK_NUTRIENTS.map((n) => (
                     <NutrientBar
@@ -47,10 +44,8 @@ const FarmDetailsSoilHealth = () => {
                 ))}
             </div>
 
-            {/* Fertilizer Recommendation */}
             <FertilizerRecommendation fertilizerPlan={MOCK_FERT_PLAN} />
 
-            {/* Notes */}
             <div className="bg-[#F8F8F8] border border-[#D9D9D9] rounded-xl p-3 text-sm text-[#344E41] font-medium">
                 No additional fertilizer needed now.
             </div>

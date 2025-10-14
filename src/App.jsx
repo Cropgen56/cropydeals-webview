@@ -5,9 +5,12 @@ import { registerLoginUser } from "./redux/slices/authSlice";
 
 import Homepage from "./pages/Homepage";
 import FarmDetails from "./pages/FarmDetails";
+import MyFarms from "./pages/MyFarms";
+import CropgenBot from "./pages/CropgenBot";
+import PreferredLanguage from "./pages/PreferredLanguage";
 import AddField from "./pages/AddField";
-import Cropinformation from "./components/cropinformation/Cropinformation";
 import MandiRates from "./pages/Mandirates";
+import Cropinformation from "./components/cropinformation/Cropinformation";
 import CropInfoDynamic from "./components/cropinformation/Cropinfo";
 // import NavigationBar from "./components/homepage/NavigationBar";
 
@@ -20,38 +23,35 @@ function App() {
   const query = useQuery();
 
   useEffect(() => {
-    // const phone = query.get("phone");
-    // const email = query.get("email");
-    // const firstName = query.get("firstName");
-    // const lastName = query.get("lastName");
-
+    // For now, using static dummy data:
     const phone = "+919876543210";
     const email = "john.doe@example.com";
     const firstName = "John";
     const lastName = "Doe";
 
+    // Only call API if no token is already stored
     const existingToken = localStorage.getItem("accessToken");
+
     if (!existingToken && phone && email && firstName && lastName) {
       dispatch(registerLoginUser({ phone, email, firstName, lastName }));
     }
   }, [dispatch, query]);
 
   return (
-    <>
-      <div>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/farm-details" element={<FarmDetails />} />
-          <Route path="/add-field" element={<AddField />} />
-          <Route path="/crop-information" element={<Cropinformation />} />
-          <Route path="/mandi-rates" element={<MandiRates />} />
-          <Route path="/cropinfo/:id" element={<CropInfoDynamic />} />
-        </Routes>
-      </div>
-      <div>
-        {/* <NavigationBar /> */}
-      </div>
-    </>
+    <div>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/farm-details" element={<FarmDetails />} />
+        <Route path="/add-field" element={<AddField />} />
+        <Route path="/crop-information" element={<Cropinformation />} />
+        <Route path="/mandi-rates" element={<MandiRates />} />
+        <Route path="/cropinfo/:id" element={<CropInfoDynamic />} />
+        <Route path="/my-farms" element={<MyFarms />} />
+        <Route path="/cropgen-bot" element={<CropgenBot />} />
+        <Route path="/preferred-language" element={<PreferredLanguage />} />
+      </Routes>
+      {/* <NavigationBar /> */}
+    </div>
   );
 }
 
