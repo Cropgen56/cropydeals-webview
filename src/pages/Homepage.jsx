@@ -13,11 +13,11 @@ const Homepage = () => {
       <div className="w-full relative">
         <Header />
       </div>
-      <div className="w-full flex justify-center absolute top-[120px] sm:top-[140px] px-4 z-20">
+      <div className="w-full flex justify-center absolute top-[210px] sm:top-[140px] px-4 z-20">
         <WeatherCard />
       </div>
 
-      <div className="w-full mt-[200px] px-4">
+      <div className="w-full mt-[170px] px-4">
         <MyFarm fields={[]} />
       </div>
 
@@ -34,7 +34,7 @@ const Homepage = () => {
       </div>
 
 
-      
+
     </div>
   );
 };
