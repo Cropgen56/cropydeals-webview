@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import farmImage from "../../assets/image/myfarms/My-farm.svg";
 import { MapPin, Pencil, SquarePen } from "lucide-react";
 import location from "../../assets/image/myfarms/location-path.svg"
 
 function MyFarmDetails({ farm }) {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [city, setCity] = useState("");
+    const [stateName, setStateName] = useState("");
 
-  const handleViewFarm = () => {
-    navigate("/farm-details");
-  };
+    const handleViewFarm = () => {
+        navigate("/farm-details", { state: { farm } });
+    };
+
+    const handleEditFarm = () => {
+        navigate("/add-field", { state: farm });
+    };
 
     return (
         <div className="flex flex-col gap-3 bg-white rounded-xl shadow-md p-5 w-full overflow-hidden">
@@ -27,7 +33,8 @@ function MyFarmDetails({ farm }) {
                         </p>
                     </div>
                 </div>
-                <button className="flex items-center gap-2 text-[#075A53] font-semibold text-sm hover:underline transition-all ease-in-out duration-500 cursor-pointer">
+                <button onClick={handleEditFarm}
+                    className="flex items-center gap-2 text-[#075A53] font-semibold text-sm hover:underline transition-all ease-in-out duration-500 cursor-pointer">
                     Edit Farm <SquarePen size={20} fill="#075A53" stroke="#FFFFFF" strokeWidth={2}  />
                 </button>
             </div>

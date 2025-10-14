@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PlusIcon } from "../../assets/Icons";
 import FarmFieldCard from "./FarmFieldCard";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { getFarmFields } from "../../redux/slices/farmSlice";
 
-const MyFarm = ({ fields }) => {
+const MyFarm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const userData = useSelector((state) => state.auth.user);
+
+  // Get farm fields from redux state
+  const { fields, status, error } = useSelector((state) => state.farm);
+
+  // Fetch farm fields on mount
+  useEffect(() => {
+    if (userData?.id) {
+      dispatch(getFarmFields(userData.id));
+    }
+  }, [dispatch, userData?.id]);
 
   return (
     <div className=" font-sans z-10 relative">
@@ -38,7 +53,14 @@ const MyFarm = ({ fields }) => {
         </div>
 
         {fields && fields.length > 0 ? (
-          fields.map((field, idx) => <FarmFieldCard key={idx} farmDetails={field} />)
+          fields.map((field, idx) => (
+            <FarmFieldCard
+              key={field._id || idx}
+              farmDetails={field}
+              cropName={field.cropName}
+              acre={field.acre}
+            />
+          ))
         ) : (
           <div className="text-gray-500 text-sm">{t("noFarmsAvailable")}</div>
         )}
