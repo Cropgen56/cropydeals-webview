@@ -267,7 +267,7 @@ const AddFieldDetails = ({
 
                     {crops &&
                       crops.map((crop) => (
-                        <option key={crop._id} value={crop._id}>
+                        <option key={crop._id} value={crop.cropName}>
                           {crop.cropName}
                         </option>
                       ))}
