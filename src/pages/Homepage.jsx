@@ -41,9 +41,9 @@ const Homepage = () => {
       </div>
 
 
-      {/* <div className='mt-40'>
+      <div className='mt-40'>
         <NavigationBar/>
-      </div> */}
+      </div>
     </div>
   )
 }
