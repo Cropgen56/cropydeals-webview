@@ -17,7 +17,7 @@ const Homepage = () => {
         <WeatherCard />
       </div>
 
-      <div className="w-full sm:mt-[200px] px-4">
+      <div className="w-full mt-[200px] px-4">
         <MyFarm fields={[]} />
       </div>
 
