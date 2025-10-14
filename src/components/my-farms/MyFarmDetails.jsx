@@ -6,8 +6,6 @@ import location from "../../assets/image/myfarms/location-path.svg"
 
 function MyFarmDetails({ farm }) {
     const navigate = useNavigate();
-    const [city, setCity] = useState("");
-    const [stateName, setStateName] = useState("");
 
     const handleViewFarm = () => {
         navigate("/farm-details", { state: { farm } });

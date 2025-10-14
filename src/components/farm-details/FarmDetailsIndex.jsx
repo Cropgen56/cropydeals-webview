@@ -16,7 +16,7 @@ const mockDates = [
     { date: "2025-10-20", cloud_cover: 0 },
 ];
 
-const FarmDetailsIndex = () => {
+const FarmDetailsIndex = ({farm}) => {
     const [selectedIndex, setSelectedIndex] = useState("NDVI");
     const [selectedDate, setSelectedDate] = useState(mockDates[0].date);
 
@@ -73,6 +73,7 @@ const FarmDetailsIndex = () => {
                     );
                 })}
             </div>
+            
         </div>
     );
 };

@@ -13,10 +13,8 @@ const MyFarm = () => {
 
   const userData = useSelector((state) => state.auth.user);
 
-  // Get farm fields from redux state
   const { fields, status, error } = useSelector((state) => state.farm);
 
-  // Fetch farm fields on mount
   useEffect(() => {
     if (userData?.id) {
       dispatch(getFarmFields(userData.id));
