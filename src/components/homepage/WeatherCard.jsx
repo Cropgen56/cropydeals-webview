@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
   LocationIcon,
-  RainCloudeIcon,
   WindIcon,
   HumidityIcon,
   PressureIcon,
   PrecipitationIcon,
   SunIcon,
 } from "../../assets/Icons";
+import MovingSun from "./MovingSun";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { getCurrentLocation } from "../../utils/getUserCurrectCoordinate";
 import { getCityState } from "../../utils/getUserLocation";
 import { fetchweatherData } from "../../redux/slices/weatherSlice";
-import { useTranslation } from "react-i18next";
-import MovingSun from "./MovingSun";
 
 const WeatherCard = () => {
   const [location, setLocation] = useState(null);
@@ -31,6 +30,7 @@ const WeatherCard = () => {
     pressure: null,
     windspeed: null,
     precipitation: null,
+    precipprob: null,
   };
 
   const updateWeatherData = () => {
@@ -80,68 +80,52 @@ const WeatherCard = () => {
   }
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="bg-white shadow-md rounded-lg w-[90%] max-w-[360px] md:max-w-[500px] p-3 md:p-5 absolute top-42 font-sans">
-        {/* Location & Temperature */}
-        <div className="flex justify-between items-center mb-3">
-          <div>
-            <h5 className="text-sm flex items-center gap-1 text-gray-800 font-bold">
-              <LocationIcon />
-              {city || t("city")}, {state || t("state")}
-            </h5>
-            <p className="text-xs text-gray-500 mt-0.5">{t("weatherToday")}</p>
-          </div>
-          <div className="flex items-center text-xl md:text-2xl text-teal-700 font-semibold">
-            <SunIcon className="w-3 h-3 md:w-3 md:h-3" />
-            <span className="pl-1">
-              {Math.round(fahrenheitToCelsius(weather?.temp)) || 30}
-              <sup>°</sup>C
-            </span>
-          </div>
+    <div className="bg-white shadow-lg rounded-2xl w-full max-w-[360px] p-4 flex flex-col justify-between">
+      {/* 📍 Location + Temp */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h5 className="text-sm flex items-center gap-1 font-bold text-gray-800">
+            <LocationIcon />
+            {city || t("city")}, {state || t("state")}
+          </h5>
+          <p className="text-xs text-gray-500">{t("weatherToday")}</p>
         </div>
+        <div className="flex items-center text-2xl font-semibold text-[#075a53]">
+          <SunIcon className="w-4 h-4 mr-1" />
+          {weather?.temp ? Math.round(fahrenheitToCelsius(weather.temp)) : "-"}
+          <sup>°</sup>C
+        </div>
+      </div>
 
-        {/* Weather Details */}
-        <div className="flex justify-between items-center flex-wrap gap-y-2">
-          <div className="flex flex-col items-center flex-1 min-w-[23%]">
-            <WindIcon className="w-4 h-4" />
-            <p className="text-[10px] text-gray-800 mt-1">
-              {weather?.windspeed || "N/A"} m/s
-            </p>
-            <small className="text-[10px] text-teal-700 mt-1">
-              {t("wind")}
-            </small>
-          </div>
-          <div className="flex flex-col items-center flex-1 min-w-[23%]">
-            <HumidityIcon className="w-4 h-4" />
-            <p className="text-[10px]  text-gray-800 mt-1">
-              {weather?.humidity || "N/A"}%
-            </p>
-            <small className="text-[10px] text-teal-700">{t("humidity")}</small>
-          </div>
-          <div className="flex flex-col items-center flex-1 min-w-[23%]  justify-between">
-            <PressureIcon className="w-4 h-4" />
-            <p className="text-[10px]  text-gray-800 mt-1">
-              {weather?.pressure || "N/A"} hPa
-            </p>
-            <small className="text-[10px] text-teal-700 mt-2">
-              {t("pressure")}
-            </small>
-          </div>
-          <div className="flex flex-col items-center flex-1 min-w-[23%]">
-            <PrecipitationIcon className="w-4 h-4" />
-            <p className="text-[10px]  text-gray-800 mt-1">
-              {weather?.precipprob || "0"} mm
-            </p>
-            <small className="text-[10px] text-teal-700">
-              {t("precipitation")}
-            </small>
-          </div>
+      {/* 🌡️ Weather details */}
+      <div className="flex justify-between items-center mt-2">
+        <div className="flex flex-col items-center flex-1">
+          <WindIcon className="w-4 h-4" />
+          <p className="text-[10px]">{weather?.windspeed || "N/A"} m/s</p>
+          <small className="text-[10px] text-[#075a53]">{t("wind")}</small>
         </div>
+        <div className="flex flex-col items-center flex-1">
+          <HumidityIcon className="w-4 h-4" />
+          <p className="text-[10px]">{weather?.humidity || "N/A"}%</p>
+          <small className="text-[10px] text-[#075a53]">{t("humidity")}</small>
+        </div>
+        <div className="flex flex-col items-center flex-1">
+          <PressureIcon className="w-4 h-4" />
+          <p className="text-[10px]">{weather?.pressure || "N/A"} hPa</p>
+          <small className="text-[10px] text-[#075a53]">{t("pressure")}</small>
+        </div>
+        <div className="flex flex-col items-center flex-1">
+          <PrecipitationIcon className="w-4 h-4" />
+          <p className="text-[10px]">{weather?.precipprob || "0"} mm</p>
+          <small className="text-[10px] text-[#075a53]">
+            {t("precipitation")}
+          </small>
+        </div>
+      </div>
 
-        {/* Moving Sun Animation */}
-        <div className="mt-2 flex justify-center items-center w-full">
-          <MovingSun />
-        </div>
+      {/* ☀️ Sun path animation */}
+      <div className="mt-1 flex justify-center">
+        <MovingSun />
       </div>
     </div>
   );
