@@ -10,7 +10,7 @@ const FarmFieldCard = ({ cropName, farmDetails, acre }) => {
 
   return (
     <div
-      onClick={() => navigate("/farm-details", { state: farmDetails })}
+      onClick={() => navigate("/farm-details", { state: { farm: farmDetails } })}
       className="min-w-[120px] h-[140px] sm:min-w-[160px] sm:h-[180px] p-2 border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col cursor-pointer hover:shadow-md"
     >
       {/* Top Image */}
