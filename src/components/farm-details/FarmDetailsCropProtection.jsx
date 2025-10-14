@@ -1,0 +1,80 @@
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronsUp, ChevronsDown } from "lucide-react";
+import PestSvg from "../../assets/image/farm-details/pest-control.png";
+
+export default function FarmDetailsCropProtection() {
+  const [showMore, setShowMore] = useState(false);
+  const contentRef = useRef(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(contentRef.current.scrollHeight);
+    }
+  }, [showMore]);
+
+  return (
+    <section className="bg-white rounded-xl border border-[#D9D9D9] p-4 md:p-6 flex flex-col gap-4">
+      <h3 className="text-xl md:text-2xl font-bold text-[#075A53]">
+        Crop Protection
+      </h3>
+
+      <div className="flex flex-row items-start gap-4 md:gap-6 relative">
+        <div className="w-[100px] h-[95px] flex justify-center items-center rounded-lg overflow-hidden bg-white">
+          <img
+            src={PestSvg}
+            alt="pest-control"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="flex-1 flex flex-col gap-2 relative">
+          <h4 className="text-xs md:text-sm font-bold text-[#075A53]">
+            Pest and their control
+          </h4>
+
+          <div
+            className={`bg-[#F8F8F8] border border-[#075A53] rounded-lg p-2 md:p-3 relative overflow-hidden transition-all duration-500`}
+            style={{
+              maxHeight: showMore ? contentHeight + 20 : 80,
+            }}
+          >
+            <div ref={contentRef}>
+              <h5 className="text-[10px] md:text-xs font-bold mb-1 text-black">
+                Aphids
+              </h5>
+              <p className="text-[10px] md:text-xs text-black">
+                Aphids are small sap-sucking insects and a common pest in crops.
+                They can reproduce rapidly and affect plant growth. Monitor your
+                crops regularly and take necessary pest control measures.
+              </p>
+            </div>
+
+            {!showMore && (
+              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#007369D6] to-transparent rounded-b-lg pointer-events-none"></div>
+            )}
+            <button
+              onClick={() => setShowMore(!showMore)}
+              className="absolute bottom-2 right-2 flex items-center gap-1 font-bold text-xs px-3 py-1 rounded transition-all ease-in-out duration-500 cursor-pointer"
+              style={{
+                color: showMore ? "#007369" : "#fff", 
+              }}
+            >
+              {showMore ? (
+                <>
+                  Show Less
+                  <ChevronsUp className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  Show More
+                  <ChevronsDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
