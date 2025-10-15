@@ -3,7 +3,7 @@ import increaseRate from "../../assets/image/farm-details/increase-rate.svg";
 import FarmDetailsMap from "./FarmDetailsMap";
 import FarmDetailsIndex from "./FarmDetailsIndex";
 
-function FarmDetailsCropHealth() {
+function FarmDetailsCropHealth({ farm }) {
     return (
         <section className="w-full flex flex-col gap-2 relative">
             <div className="flex justify-between items-center px-6 py-2">
@@ -30,9 +30,9 @@ function FarmDetailsCropHealth() {
             </div>
 
             <div className="relative w-full h-[300px] sm:h-[400px]">
-                <FarmDetailsMap />
+                <FarmDetailsMap coordinates={farm.field}/>
                 <div className="absolute bottom-0 left-0 w-full z-[999] shadow-[0_-4px_4px_0_#F8F8F840]">
-                    <FarmDetailsIndex />
+                    <FarmDetailsIndex farm={farm}/>
                 </div>
             </div>
         </section>
