@@ -15,13 +15,15 @@ const NavigationBar = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex justify-around items-end w-full h-full fixed bottom-0 left-0 right-0">
+        <div className="fixed bottom-0 left-0 right-0 z-[100]">
+
             {/* Background Image */}
             <img
                 src={bottomImage}
                 alt="navigation background"
-                className="w-full absolute -z-10 bottom-0 left-0 right-0 h-20 md:h-24 object-cover"
+                className="w-full absolute -z-10 bottom-0 left-0 right-0 h-20 md:h-24 object-cover pointer-events-none"
             />
+
 
             {/* Bottom Navigation */}
             <div className="flex justify-around items-center p-2 md:p-4 rounded-t-[10px] fixed bottom-0 left-0 right-0 z-[100]">

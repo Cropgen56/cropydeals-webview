@@ -115,7 +115,7 @@ const WeatherCard = () => {
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-center w-full">
         <MovingSun />
       </div>
     </div>

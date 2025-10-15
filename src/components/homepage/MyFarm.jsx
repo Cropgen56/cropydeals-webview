@@ -26,7 +26,7 @@ const MyFarm = () => {
       <p className="text-[#075a53] text-lg sm:text-xl font-semibold mb-3 ">
         {t("myFarm")}
       </p>
-      <div className="flex items-center gap-4 overflow-x-auto pb-2">
+      <div className="flex items-center gap-4 overflow-x-auto pb-2 no-scrollbar">
         {/* Add field card */}
         <div
           onClick={() => navigate("/add-field")}

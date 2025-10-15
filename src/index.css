@@ -13,6 +13,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -23,19 +24,24 @@
     transform: scale(0.8);
     opacity: 0.5;
   }
+
   60% {
     transform: scale(1.1);
     opacity: 1;
   }
+
   100% {
     transform: scale(1);
   }
 }
 
 @keyframes pulsate {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -52,4 +58,42 @@
 
 .animate-pulsate {
   animation: pulsate 1.5s infinite ease-in-out;
+}
+
+/* 3D Logo rotation */
+@keyframes rotate3d {
+  0% {
+    transform: perspective(400px) rotateY(0deg);
+  }
+
+  50% {
+    transform: perspective(400px) rotateY(180deg);
+  }
+
+  100% {
+    transform: perspective(400px) rotateY(360deg);
+  }
+}
+
+/* Text pulsate */
+@keyframes pulsate {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Apply animations */
+.animate-rotate3d {
+  animation: rotate3d 2s linear infinite;
+  transform-style: preserve-3d;
+}
+
+.animate-pulsate {
+  animation: pulsate 1s ease-in-out infinite;
 }

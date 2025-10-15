@@ -29,7 +29,7 @@ const MandiRate = () => {
                 onClick={()=>{
                     navigate("/mandi-rates")
                 }}
-                className="mt-3  z-[200] sm:mt-0 bg-emerald-900 text-white text-sm sm:text-lg font-semibold py-2 px-5 sm:px-7 rounded-2xl hover:bg-emerald-800 transition ">
+                className="mt-3   sm:mt-0 bg-emerald-900 text-white text-sm sm:text-lg font-semibold py-2 px-5 sm:px-7 rounded-2xl hover:bg-emerald-800 transition ">
                     Check Rate
                 </button>
             </div>

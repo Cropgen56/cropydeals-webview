@@ -12,7 +12,7 @@ import AddField from "./pages/AddField";
 import MandiRates from "./pages/Mandirates";
 import Cropinformation from "./components/cropinformation/Cropinformation";
 import CropInfoDynamic from "./components/cropinformation/Cropinfo";
-// import NavigationBar from "./components/homepage/NavigationBar";
+import Profile from "./pages/Profile";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -29,7 +29,6 @@ function App() {
     const firstName = "John";
     const lastName = "Doe";
 
-    // Only call API if no token is already stored
     const existingToken = localStorage.getItem("accessToken");
 
     if (!existingToken && phone && email && firstName && lastName) {
@@ -49,8 +48,8 @@ function App() {
         <Route path="/my-farms" element={<MyFarms />} />
         <Route path="/cropgen-bot" element={<CropgenBot />} />
         <Route path="/preferred-language" element={<PreferredLanguage />} />
+        <Route path="/profile" element={<Profile/>} />
       </Routes>
-      {/* <NavigationBar /> */}
     </div>
   );
 }
