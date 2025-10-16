@@ -14,6 +14,7 @@ export const fetchCrops = createAsyncThunk(
         },
       });
       return response.data.data;
+      console.log(response);
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch crops"

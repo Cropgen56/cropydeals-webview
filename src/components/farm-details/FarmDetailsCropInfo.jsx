@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CropImg from "../../assets/image/farm-details/crop-img.svg";
 import FarmDetailsMetrics from "./FarmDetailsMetrics";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,31 +6,41 @@ import { calculateAiYield } from "../../redux/slices/satelliteSlice";
 import { fetchCrops } from "../../redux/slices/cropSlice";
 
 function FarmDetailsCropInfo({ farm }) {
-  const { cropHealth, cropYield } = useSelector( (state) => state.satellite || {} );
-  const { cropsList } = useSelector((state) => state.crop || {});
+  const { cropHealth, cropYield } = useSelector(
+    (state) => state.satellite || {}
+  );
+  const { crops } = useSelector((state) => state.crop || {});
   const dispatch = useDispatch();
 
+  const [cropImage, setCropImage] = useState(CropImg);
+
   useEffect(() => {
-    if (!cropsList || cropsList.length === 0) {
+    if (!crops || crops.length === 0) {
       dispatch(fetchCrops());
     }
-  }, [dispatch, cropsList]);
+  }, [dispatch, crops]);
 
   useEffect(() => {
-  if (farm?._id) {
-    dispatch(calculateAiYield({ farmDetails: farm, bbchStage: 89 }));
-  }
-}, [dispatch, farm]);
+    if (farm?._id) {
+      dispatch(calculateAiYield({ farmDetails: farm, bbchStage: 89 }));
+    }
+  }, [dispatch, farm]);
 
-    
-  const cropName = farm?.cropName?.trim().toLowerCase() || "";
-   const matchedCrop = cropsList?.find((crop) => crop.cropName?.trim().toLowerCase() === cropName);
+  useEffect(() => {
+    if (!farm) return;
 
-const cropImage = matchedCrop?.cropImage ? matchedCrop?.cropImage : CropImg
+    const cropName = farm.cropName?.trim().toLowerCase();
+    if (!crops || crops.length === 0 || !cropName) return;
+
+    const match = crops.find(
+      (crop) => crop.cropName && crop.cropName.trim().toLowerCase() === cropName
+    );
+
+    setCropImage(match?.cropImage || CropImg);
+  }, [crops, farm]);
 
   const healthPercent = Number(cropHealth?.data?.Health_Percentage) || 0;
   const healthStatus = cropHealth?.data?.Crop_Health || "-";
-
 
   const getHealthColor = (status) => {
     switch (status) {
@@ -72,8 +82,8 @@ const cropImage = matchedCrop?.cropImage ? matchedCrop?.cropImage : CropImg
 
       <div className="flex items-center gap-4 sm:gap-8 sm:mx-8">
         <img
-            src={cropImage}
-            alt={farm?.cropName || "Crop"}
+          src={cropImage}
+          alt={farm?.cropName || "Crop"}
           className="w-[100px] h-[100px] rounded-lg border-2 border-[#075A53] object-cover"
         />
         <div className="flex flex-col flex-1 gap-1">

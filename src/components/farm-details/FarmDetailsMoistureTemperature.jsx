@@ -28,10 +28,8 @@ const FarmDetailsMoistureTemperature = () => {
     (state) => state.weather?.forecastData ?? null,
     shallowEqual
   );
-  // console.log("Forecast data", forecastRaw);
 
   const forecastCurrent = forecastRaw?.current ?? forecastRaw ?? null;
-  // console.log("Current forecast", forecastCurrent);
 
   const soilMoistureKeys = [
     "soil_moisture_surface",
@@ -60,8 +58,8 @@ const FarmDetailsMoistureTemperature = () => {
   const soilTemperatureDisplay =
     forecastSoilTemp !== null ? `${formatOne(forecastSoilTemp)}°C` : "N/A";
 
-  console.log("🌱 Soil Moisture:", forecastSoilMoisture);
-  console.log("🌡️ Soil Temperature:", forecastSoilTemp);
+  // console.log("soil moisture:", forecastSoilMoisture);
+  // console.log("soil temperature:", forecastSoilTemp);
 
   return (
     <section className="bg-white rounded-xl border border-[#E6EEF0] md:px-8 p-4 flex flex-col gap-4">

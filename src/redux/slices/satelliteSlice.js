@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { formatDate } from "../../utils/formatDate";
 
 const SATELLITE_API = `https://server.cropgenapp.com`;
 
@@ -67,6 +68,7 @@ export const generateAdvisory = createAsyncThunk(
   "satellite/generateAdvisory",
   async (
     { farmDetails, currentWeather, SoilMoisture, bbchStage, language },
+
     { rejectWithValue }
   ) => {
     try {
@@ -132,11 +134,12 @@ export const generateAdvisory = createAsyncThunk(
         language: lang,
         type_of_farming: typeOfFarming || "",
       };
-
       const response = await axios.post(
         `${SATELLITE_API}/generate-advisory-crop`,
         payload
       );
+      console.log("API Advisory response:", response?.data);
+
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
@@ -191,7 +194,9 @@ export const calculateAiYield = createAsyncThunk(
   async ({ farmDetails, bbchStage }, { rejectWithValue }) => {
     try {
       if (!farmDetails || !farmDetails._id) {
-        return rejectWithValue({ message: "Invalid farmDetails: _id is missing" });
+        return rejectWithValue({
+          message: "Invalid farmDetails: _id is missing",
+        });
       }
 
       const { field = [], cropName } = farmDetails;
