@@ -6,9 +6,13 @@ const SINGLE_CROP_API_URL = "https://server.cropgenapp.com/v1/api/crop/get/";
 
 export const fetchCrops = createAsyncThunk(
   "crops/fetchCrops",
-  async (_, { rejectWithValue }) => {
+  async (token, { rejectWithValue }) => {
     try {
-      const response = await axios.get(LIST_API_URL);
+      const response = await axios.get(LIST_API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data.data;
     } catch (error) {
       return rejectWithValue(

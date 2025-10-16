@@ -1,13 +1,12 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-// --- Constants ---
 const SATELLITE_API = `https://server.cropgenapp.com`;
 
 // --- Helpers ---
-const normalizeError = err => {
+const normalizeError = (err) => {
   if (err instanceof Error) return err;
-  if (err && typeof err === 'object') {
+  if (err && typeof err === "object") {
     try {
       const msg =
         (err.response &&
@@ -16,7 +15,7 @@ const normalizeError = err => {
         JSON.stringify(err);
       return new Error(msg);
     } catch {
-      return new Error('Unknown error');
+      return new Error("Unknown error");
     }
   }
   return new Error(String(err));
@@ -24,7 +23,7 @@ const normalizeError = err => {
 
 // initial state (no AdvisoryV2, no cache-related flags)
 const initialState = {
-  selectedIndex: 'NDVI',
+  selectedIndex: "NDVI",
   datesData: [],
   indexData: null,
   cropHealth: null,
@@ -43,49 +42,47 @@ const initialState = {
   },
 };
 
-// ---------------- Thunks ----------------
-
 // fetchDatesData
 export const fetchDatesData = createAsyncThunk(
-  'satellite/fetchDatesData',
-  async (availabilityPayload, {rejectWithValue}) => {
+  "satellite/fetchDatesData",
+  async (availabilityPayload, { rejectWithValue }) => {
     try {
       if (!availabilityPayload) {
-        return rejectWithValue({message: 'Geometry is missing'});
+        return rejectWithValue({ message: "Geometry is missing" });
       }
       const response = await axios.post(
         `${SATELLITE_API}/v4/api/availability/`,
-        availabilityPayload,
+        availabilityPayload
       );
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
-      return rejectWithValue({message: err.message});
+      return rejectWithValue({ message: err.message });
     }
-  },
+  }
 );
 
 // generateAdvisory (v1)
 export const generateAdvisory = createAsyncThunk(
-  'satellite/generateAdvisory',
+  "satellite/generateAdvisory",
   async (
-    {farmDetails, currentWeather, SoilMoisture, bbchStage, language},
-    {rejectWithValue},
+    { farmDetails, currentWeather, SoilMoisture, bbchStage, language },
+    { rejectWithValue }
   ) => {
     try {
       if (!farmDetails || !farmDetails._id) {
         return rejectWithValue({
-          message: 'Invalid farmDetails: Farm ID is missing',
+          message: "Invalid farmDetails: Farm ID is missing",
         });
       }
-      if (!currentWeather || typeof currentWeather !== 'object') {
+      if (!currentWeather || typeof currentWeather !== "object") {
         return rejectWithValue({
-          message: 'currentWeather is required to generate advisory',
+          message: "currentWeather is required to generate advisory",
         });
       }
 
       const farmId = farmDetails._id;
-      const lang = language || 'en';
+      const lang = language || "en";
 
       const {
         cropName,
@@ -96,7 +93,7 @@ export const generateAdvisory = createAsyncThunk(
       } = farmDetails || {};
       if (!cropName || !sowingDate) {
         return rejectWithValue({
-          message: 'Missing required farm data: cropName or sowingDate',
+          message: "Missing required farm data: cropName or sowingDate",
         });
       }
 
@@ -106,71 +103,69 @@ export const generateAdvisory = createAsyncThunk(
 
       // Use currentWeather directly (no cached augmentation)
       const currentConditions = currentWeather || {};
-      const stage = bbchStage || 'BBCH 00';
+      const stage = bbchStage || "BBCH 00";
 
       const payload = {
         crop_name: cropName,
         sowing_date: formattedSowingDate,
         bbch_stage: stage,
-        variety: variety || '',
-        irrigation_type: irrigation_type || '',
+        variety: variety || "",
+        irrigation_type: irrigation_type || "",
         humidity: Math.round(
-          currentConditions.humidity ??
-            currentConditions.relative_humidity ??
-            0,
+          currentConditions.humidity ?? currentConditions.relative_humidity ?? 0
         ),
         temp: Math.round(
-          currentConditions.temp ?? currentConditions.temperature ?? 0,
+          currentConditions.temp ?? currentConditions.temperature ?? 0
         ),
         rain: Math.round(
           currentConditions.precipprob ??
             currentConditions.precipitation ??
             currentConditions.rain ??
-            0,
+            0
         ),
         soil_temp: Math.round(
-          SoilMoisture?.data?.Soil_Temperature?.Soil_Temperature_max ?? 0,
+          SoilMoisture?.data?.Soil_Temperature?.Soil_Temperature_max ?? 0
         ),
         soil_moisture: Math.round(
-          SoilMoisture?.data?.Soil_Moisture?.Soil_Moisture_max ?? 0,
+          SoilMoisture?.data?.Soil_Moisture?.Soil_Moisture_max ?? 0
         ),
         language: lang,
-        type_of_farming: typeOfFarming || '',
+        type_of_farming: typeOfFarming || "",
       };
 
       const response = await axios.post(
         `${SATELLITE_API}/generate-advisory-crop`,
-        payload,
+        payload
       );
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
-      return rejectWithValue({message: err.message});
+      return rejectWithValue({ message: err.message });
     }
-  },
+  }
 );
 
 // fetchIndexData
 export const fetchIndexData = createAsyncThunk(
-  'satellite/fetchIndexData',
+  "satellite/fetchIndexData",
   async (
-    {sowingDate, selectedDate, coordinates, selectedIndex},
-    {rejectWithValue},
+    { sowingDate, selectedDate, coordinates, selectedIndex },
+    { rejectWithValue }
   ) => {
     try {
       if (!sowingDate || !selectedDate || !coordinates || !selectedIndex) {
-        return rejectWithValue({message: 'Missing required parameters'});
+        return rejectWithValue({ message: "Missing required parameters" });
       }
       if (!Array.isArray(coordinates) || coordinates.length === 0) {
-        return rejectWithValue({message: 'Invalid or missing coordinates'});
+        return rejectWithValue({ message: "Invalid or missing coordinates" });
       }
 
       const payload = {
-        geometry: {type: 'Polygon', coordinates},
+        geometry: { type: "Polygon", coordinates },
         date: selectedDate,
         index_name: selectedIndex,
-        provider: 'both',
-        satellite: 's2',
+        provider: "both",
+        satellite: "s2",
         width: 256,
         height: 256,
         supersample: 1,
@@ -180,57 +175,58 @@ export const fetchIndexData = createAsyncThunk(
 
       const response = await axios.post(
         `${SATELLITE_API}/v4/api/calculate/index`,
-        payload,
+        payload
       );
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
-      return rejectWithValue({message: err.message});
+      return rejectWithValue({ message: err.message });
     }
-  },
+  }
 );
 
 // calculateAiYield
 export const calculateAiYield = createAsyncThunk(
-  'satellite/calculateAiYield',
-  async (farmDetails, {rejectWithValue}) => {
+  "satellite/calculateAiYield",
+  async ({ farmDetails, bbchStage }, { rejectWithValue }) => {
     try {
       if (!farmDetails || !farmDetails._id) {
-        return rejectWithValue({
-          message: 'Invalid farmDetails: _id is missing',
-        });
+        return rejectWithValue({ message: "Invalid farmDetails: _id is missing" });
       }
 
-      const {field = [], cropName} = farmDetails || {};
+      const { field = [], cropName } = farmDetails;
       if (!Array.isArray(field) || field.length === 0 || !cropName) {
-        return rejectWithValue({message: 'Invalid field or cropName'});
+        return rejectWithValue({ message: "Invalid field or cropName" });
       }
 
-      const coordinates = field.map(({lat, lng}) => {
-        if (typeof lat !== 'number' || typeof lng !== 'number') {
-          throw new Error(`Invalid coordinate: lat=${lat}, lng=${lng}`);
-        }
-        return [lng, lat];
-      });
+      const formattedCropName =
+        cropName.charAt(0).toUpperCase() + cropName.slice(1).toLowerCase();
 
-      const response = await axios.post(`${SATELLITE_API}/ai-yield`, {
-        crop_name: cropName,
-        crop_growth_stage: 'Harvesting',
+      const coordinates = field.map(({ lat, lng }) => [lng, lat]);
+
+      const payload = {
+        crop_name: formattedCropName,
+        bbch_stage: bbchStage ?? 89,
         geometry: [coordinates],
-      });
+      };
+
+      const response = await axios.post(
+        `${SATELLITE_API}/v2/api/ai-yield`,
+        payload
+      );
 
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
-      return rejectWithValue({message: err.message});
+      return rejectWithValue({ message: err.message });
     }
-  },
+  }
 );
 
 // fetchCropHealth
 export const fetchCropHealth = createAsyncThunk(
-  'satellite/cropHealth',
-  async (polygonCoords, {rejectWithValue}) => {
+  "satellite/cropHealth",
+  async (polygonCoords, { rejectWithValue }) => {
     try {
       function unwrapCoordinates(coords) {
         if (
@@ -248,66 +244,66 @@ export const fetchCropHealth = createAsyncThunk(
         `https://server.cropgenapp.com/v2/api/crop-health`,
         {
           geometry: coordinate,
-        },
+        }
       );
 
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
-      return rejectWithValue({message: err.message});
+      return rejectWithValue({ message: err.message });
     }
-  },
+  }
 );
 
 // getNpkData
 export const getNpkData = createAsyncThunk(
-  'satellite/getNpkData',
-  async (payload, {rejectWithValue}) => {
+  "satellite/getNpkData",
+  async (payload, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${SATELLITE_API}/v2/api/calculate-npk`,
-        payload,
+        payload
       );
       return response?.data ?? null;
     } catch (err) {
       const error = normalizeError(err);
       return rejectWithValue({
-        message: error.message || 'Failed to fetch new NPK data',
+        message: error.message || "Failed to fetch new NPK data",
       });
     }
-  },
+  }
 );
 
 // getTheCropGrowthStage
 export const getTheCropGrowthStage = createAsyncThunk(
-  'satellite/getTheCropGrowthStage',
-  async (payload, {rejectWithValue}) => {
+  "satellite/getTheCropGrowthStage",
+  async (payload, { rejectWithValue }) => {
     try {
-      if (!payload) return rejectWithValue({message: 'Payload is required'});
+      if (!payload) return rejectWithValue({ message: "Payload is required" });
 
       const response = await axios.post(
         `${SATELLITE_API}/v2/api/bbch-stage`,
-        payload,
+        payload
       );
       return response?.data ?? null;
     } catch (err) {
       const error = normalizeError(err);
       return rejectWithValue({
-        message: error.message || 'Failed to fetch crop growth stage',
+        message: error.message || "Failed to fetch crop growth stage",
       });
     }
-  },
+  }
 );
 
 // ---------------- Slice ----------------
 const satelliteSlice = createSlice({
-  name: 'satellite',
+  name: "satellite",
   initialState,
   reducers: {
     setSelectedIndex: (state, action) => {
       state.selectedIndex = action.payload;
     },
-    resetState: state => {
+    resetState: (state) => {
       state.datesData = null;
       state.indexData = null;
       state.cropHealth = null;
@@ -316,21 +312,21 @@ const satelliteSlice = createSlice({
       state.cropGrowthStage = null;
       state.Advisory = null;
     },
-    resetAdvisory: state => {
+    resetAdvisory: (state) => {
       state.Advisory = null;
       state.isLoading.Advisory = false;
       state.error = null;
     },
   },
-  extraReducers: builder => {
-    const setPending = state => {
+  extraReducers: (builder) => {
+    const setPending = (state) => {
       state.loading = true;
       state.error = null;
     };
 
     // fetchDatesData
     builder
-      .addCase(fetchDatesData.pending, state => {
+      .addCase(fetchDatesData.pending, (state) => {
         state.isLoading.datesData = true;
       })
       .addCase(fetchDatesData.fulfilled, (state, action) => {
@@ -344,7 +340,7 @@ const satelliteSlice = createSlice({
 
     // fetchIndexData
     builder
-      .addCase(fetchIndexData.pending, state => {
+      .addCase(fetchIndexData.pending, (state) => {
         state.isLoading.index = true;
         state.error = null;
       })
@@ -383,7 +379,7 @@ const satelliteSlice = createSlice({
 
     // generateAdvisory (v1)
     builder
-      .addCase(generateAdvisory.pending, state => {
+      .addCase(generateAdvisory.pending, (state) => {
         state.isLoading.Advisory = true;
       })
       .addCase(generateAdvisory.fulfilled, (state, action) => {
@@ -397,7 +393,7 @@ const satelliteSlice = createSlice({
 
     // getNpkData
     builder
-      .addCase(getNpkData.pending, state => {
+      .addCase(getNpkData.pending, (state) => {
         state.isLoading.newNpkData = true;
       })
       .addCase(getNpkData.fulfilled, (state, action) => {
@@ -411,7 +407,7 @@ const satelliteSlice = createSlice({
 
     // getTheCropGrowthStage
     builder
-      .addCase(getTheCropGrowthStage.pending, state => {
+      .addCase(getTheCropGrowthStage.pending, (state) => {
         state.isLoading.cropGrowthStage = true;
         state.error = null;
       })
@@ -426,7 +422,7 @@ const satelliteSlice = createSlice({
   },
 });
 
-export const {setSelectedIndex, resetState, resetAdvisory} =
+export const { setSelectedIndex, resetState, resetAdvisory } =
   satelliteSlice.actions;
 
 export default satelliteSlice.reducer;
