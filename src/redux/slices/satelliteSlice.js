@@ -138,8 +138,6 @@ export const generateAdvisory = createAsyncThunk(
         `${SATELLITE_API}/generate-advisory-crop`,
         payload
       );
-      console.log("API Advisory response:", response?.data);
-
       return response?.data ?? null;
     } catch (error) {
       const err = normalizeError(error);
