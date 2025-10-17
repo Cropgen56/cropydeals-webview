@@ -83,7 +83,7 @@ const WeatherCard = () => {
             <LocationIcon />
             {city || t("city")}, {state || t("state")}
           </h5>
-          <p className="text-xs text-gray-500">{t("weatherToday")}</p>
+          <p className="text-xs text-gray-500">{t("Weather Today")}</p>
         </div>
         <div className="flex items-center justify-center sm:justify-end text-2xl font-semibold text-[#075a53] mt-2 sm:mt-0">
           <SunIcon className="w-4 h-4 mr-1" />

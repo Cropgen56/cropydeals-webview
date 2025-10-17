@@ -15,7 +15,7 @@ const MyFarmHeader = () => {
             </button>
 
             <h1 className="text-white text-xl md:text-2xl font-bold">
-                {t("myFarms")}
+                {t("MyFarm")}
             </h1>
         </header>
     );

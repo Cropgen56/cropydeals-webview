@@ -92,7 +92,7 @@ const Profile = () => {
                             ))
                         ) : (
                             <div className="text-gray-500 text-sm">
-                                {t("noFarmsAvailable")}
+                                {t("No Farms Available")}
                             </div>
                         )}
                     </div>

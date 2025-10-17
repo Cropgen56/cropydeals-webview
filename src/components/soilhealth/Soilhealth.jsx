@@ -19,11 +19,11 @@ const SoilHealthReport = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-[14px] font-bold text-emerald-900">
-          {t("soilHealthReport")}
+          {t("Soil Health Report")}
         </h2>
         <button className="flex items-center gap-1 text-white bg-emerald-900 text-xs font-medium px-3 py-1.5 rounded-lg shadow-sm hover:bg-emerald-800 transition-all">
           <Rocket size={14} />
-          <span className="text-[8px]">{t("start3DaysFreeTrial")}</span>
+          <span className="text-[8px]">{t("Start 3Days Free Trial")}</span>
         </button>
       </div>
 
@@ -43,8 +43,8 @@ const SoilHealthReport = () => {
 
       {/* Footer Button */}
       <div className="bg-emerald-900 text-center rounded-xl py-2">
-        <h3 className="text-white font-semibold text-sm">{t("getReportPrice", { price: 199 })}</h3>
-        <p className="text-white text-xs opacity-80 mt-1">{t("downloadReport")}</p>
+        <h3 className="text-white font-semibold text-sm">{t("Get Report Price", { price: 199 })}</h3>
+        <p className="text-white text-xs opacity-80 mt-1">{t("Download Report")}</p>
       </div>
     </div>
   );

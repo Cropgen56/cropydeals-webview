@@ -18,7 +18,7 @@ const Cropinformation = () => {
     <div className="p-4">
       {/* Section Title */}
       <h1 className="text-xl text-[#075A53] font-semibold">
-        {t("cropInformation")}
+        {t("crop Information")}
       </h1>
 
       {/* Loading & Error Messages */}

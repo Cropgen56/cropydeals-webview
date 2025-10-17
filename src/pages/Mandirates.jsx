@@ -63,7 +63,7 @@ const MandiRatesScreen = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-red-500 mb-4">{t("failedLoadCrops")}</p>
+          <p className="text-red-500 mb-4">{t("Failed Load Crops")}</p>
           <button
             onClick={() => dispatch(fetchCrops())}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -83,7 +83,7 @@ const MandiRatesScreen = () => {
           <button
             onClick={() => { navigate("/") }}
             className="text-gray-800 p-1">←</button>
-          <h1 className="text-xl font-bold text-gray-900">{t("mandiRate")}</h1>
+          <h1 className="text-xl font-bold text-gray-900">{t("Mandi Rate")}</h1>
         </div>
       </div>
 
@@ -92,7 +92,7 @@ const MandiRatesScreen = () => {
         <div className="relative flex justify-center">
           <input
             type="text"
-            placeholder={t("searchCrop")}
+            placeholder={t("Search Crop")}
             className="w-[300px] py-2 px-4 pl-11 rounded-full border-[2px] border-gray-300 focus:outline-none focus:ring-4 focus:ring-green-500 focus:border-transparent"
             disabled={cropsLoading}
           />
@@ -135,7 +135,7 @@ const MandiRatesScreen = () => {
           <div className="flex justify-center items-center py-20">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">{t("fetchingMandiPrices")}</p>
+              <p className="mt-4 text-gray-600">{t("Fetching MandiPrices")}</p>
             </div>
           </div>
         ) : mandiError ? (

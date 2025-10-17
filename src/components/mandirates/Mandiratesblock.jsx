@@ -21,10 +21,10 @@ const MandiRate = () => {
       <div className="flex justify-between items-start sm:items-center mb-5">
         <div>
           <h2 className="text-xl sm:text-3xl font-bold text-emerald-900">
-            {t("mandiRate")}
+            {t("Mandi Rate")}
           </h2>
           <p className="text-gray-400 text-sm sm:text-base mt-1">
-            {t("getRealTimeMandiRates")}
+            {t("Get Real Time Mandi rates")}
           </p>
         </div>
         <button
@@ -33,7 +33,7 @@ const MandiRate = () => {
           }}
           className="mt-3 sm:mt-0 bg-emerald-900 text-white text-sm sm:text-lg font-semibold py-2 px-5 sm:px-7 rounded-2xl hover:bg-emerald-800 transition"
         >
-          {t("checkRate")}
+          {t("Check Rate")}
         </button>
       </div>
 

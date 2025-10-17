@@ -66,7 +66,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         onClick={() => navigate("/my-farms")}
                     >
                         <AddFieldIcon />
-                        {t("myFarms")}
+                        {t("My Farms")}
                     </li>
 
                     <li

@@ -27,7 +27,7 @@ function MyFarmDetails({ farm }) {
                         className="rounded-lg object-contain w-10 h-10 md:w-12 md:h-12"
                     />
                     <div>
-                        <h2 className="text-lg md:text-xl font-bold text-[#000]">{t("myFarm")}</h2>
+                        <h2 className="text-lg md:text-xl font-bold text-[#000]">{t("MyFarm")}</h2>
                         <p className="text-xs text-[#A7A5A5]">
                             {farm.city}, {farm.state}
                         </p>
@@ -35,7 +35,7 @@ function MyFarmDetails({ farm }) {
                 </div>
                 <button onClick={handleEditFarm}
                     className="flex items-center gap-2 text-[#075A53] font-semibold text-sm hover:underline transition-all ease-in-out duration-500 cursor-pointer">
-                    {t("editFarm")} <SquarePen size={20} fill="#075A53" stroke="#FFFFFF" strokeWidth={2} />
+                    {t("Edit Farm")} <SquarePen size={20} fill="#075A53" stroke="#FFFFFF" strokeWidth={2} />
                 </button>
             </div>
 
@@ -49,9 +49,9 @@ function MyFarmDetails({ farm }) {
                 </div>
 
                 <div className="flex-1 flex flex-col justify-around w-2/3 bg-white rounded-lg p-2">
-                    <DetailRow label={t("farmName")} value={farm.fieldName || "N/A"} />
+                    <DetailRow label={t("Farm Name")} value={farm.fieldName || "N/A"} />
                     <DetailRow label={t("crop")} value={farm.cropName || "N/A"} />
-                    <DetailRow label={t("sowingDate")} value={farm.sowingDate || "N/A"} />
+                    <DetailRow label={t("Sowing Date")} value={farm.sowingDate || "N/A"} />
                     <DetailRow label={t("area")} value={`${(farm.acre ?? 0).toFixed(2)} ${t("acre")}`} />
                 </div>
             </div>
@@ -59,7 +59,7 @@ function MyFarmDetails({ farm }) {
             <div>
                 <button onClick={handleViewFarm}
                     className="bg-[#075A53] hover:bg-[#054f48] text-white font-semibold w-full py-3 rounded-lg shadow-md transition-all ease-in-out duration-500 cursor-pointer">
-                    {t("viewFarm")}
+                    {t("View Farm")}
                 </button>
             </div>
         </div>
