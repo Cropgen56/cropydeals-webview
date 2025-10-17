@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerLoginUser } from "./redux/slices/authSlice";
+import { useTranslation } from "react-i18next";
 
+// Pages
 import Homepage from "./pages/Homepage";
 import FarmDetails from "./pages/FarmDetails";
 import MyFarms from "./pages/MyFarms";
@@ -14,16 +16,15 @@ import Cropinformation from "./components/cropinformation/Cropinformation";
 import CropInfoDynamic from "./components/cropinformation/Cropinfo";
 import Profile from "./pages/Profile";
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 function App() {
   const dispatch = useDispatch();
-  const query = useQuery();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
-    // For now, using static dummy data:
+    const lang = "en";
+    i18n.changeLanguage(lang);
+    localStorage.setItem("language", lang);
+
     const phone = "+919876543210";
     const email = "john.doe@example.com";
     const firstName = "John";
@@ -34,7 +35,7 @@ function App() {
     if (!existingToken && phone && email && firstName && lastName) {
       dispatch(registerLoginUser({ phone, email, firstName, lastName }));
     }
-  }, [dispatch, query]);
+  }, [dispatch, i18n]);
 
   return (
     <div>
@@ -48,7 +49,7 @@ function App() {
         <Route path="/my-farms" element={<MyFarms />} />
         <Route path="/cropgen-bot" element={<CropgenBot />} />
         <Route path="/preferred-language" element={<PreferredLanguage />} />
-        <Route path="/profile" element={<Profile/>} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   );

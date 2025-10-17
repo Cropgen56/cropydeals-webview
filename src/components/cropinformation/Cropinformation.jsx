@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCrops } from "../../redux/slices/cropSlice";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Cropinformation = () => {
   const dispatch = useDispatch();
   const { crops, loading, error } = useSelector((state) => state.crops);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     dispatch(fetchCrops());
@@ -14,11 +16,16 @@ const Cropinformation = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl text-[#075A53] font-semibold">Crop Information</h1>
+      {/* Section Title */}
+      <h1 className="text-xl text-[#075A53] font-semibold">
+        {t("cropInformation")}
+      </h1>
 
-      {loading && <p>Loading crops...</p>}
+      {/* Loading & Error Messages */}
+      {loading && <p>{t("loadingCrops")}</p>}
       {error && <p className="text-red-500">{error}</p>}
 
+      {/* Crop List */}
       <div className="flex gap-4 overflow-x-auto no-scrollbar mt-5">
         {crops.map((crop) => (
           <div

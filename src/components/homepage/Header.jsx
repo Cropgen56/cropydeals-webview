@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next"; // <-- add this import
 import bannerimage from "../../assets/backgroundbanner.png";
 import ProfileIcon from "../../assets/image/homepage/profile.svg";
 import farmerimage from "../../assets/image/homepage/farmerimage.png";
@@ -8,18 +9,20 @@ import Sidebar from "../sidebar/Sidebar";
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, loading } = useSelector((state) => state.auth);
+  const { t } = useTranslation(); // <-- initialize translation
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="relative w-full h-[20rem]  text-white">
+    <div className="relative w-full h-[20rem] text-white">
+      {/* Background Banner */}
       <img
         src={bannerimage}
         alt="banner"
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
 
-
+      {/* Profile Icon */}
       <div
         className="absolute top-4 right-4 z-30 cursor-pointer rounded-full bg-white p-2 shadow-lg"
         onClick={toggleSidebar}
@@ -27,16 +30,18 @@ const Header = () => {
         <img src={ProfileIcon} alt="Profile" className="w-5 h-5" />
       </div>
 
-
+      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
+      {/* Welcome Text */}
       <div className="absolute top-1/3 left-10 z-20 text-left">
-        <h1 className="text-lg sm:text-xl font-semibold">Welcome</h1>
+        <h1 className="text-lg sm:text-xl font-semibold">{t("welcome")}</h1>
         <p className="text-xl sm:text-2xl font-bold">
-          {loading ? "..." : user ? `${user.firstName} ${user.lastName}` : "Guest"}
+          {loading ? "..." : user ? `${user.firstName} ${user.lastName}` : t("guest")}
         </p>
       </div>
 
+      {/* Farmer Image */}
       <div className="absolute bottom-5 right-10 z-20">
         <img
           src={farmerimage}

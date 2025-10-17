@@ -5,10 +5,12 @@ import MyFarmDetails from "../components/my-farms/MyFarmDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { getFarmFields } from "../redux/slices/farmSlice";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function MyFarms() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const userData = useSelector((state) => state.auth.user);
     const { fields, status, error } = useSelector((state) => state.farm);
 
@@ -20,14 +22,14 @@ export default function MyFarms() {
 
     // Loading state
     if (status === "loading") {
-            return (
-                <div className="flex flex-col items-center justify-center min-h-screen">
-                    <Loader className="text-[#075A53] w-20 h-20 animate-spin" />
-                    <h2 className="text-xl font-semibold mt-4 text-gray-700">
-                        Loading your farms...
-                    </h2>
-                </div>
-            );
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <Loader className="text-[#075A53] w-20 h-20 animate-spin" />
+                <h2 className="text-xl font-semibold mt-4 text-gray-700">
+                    {t("loadingFarms")}
+                </h2>
+            </div>
+        );
     }
 
     // If fields array is empty, show "No Farms Added" 
@@ -38,15 +40,16 @@ export default function MyFarms() {
                 <main className="p-4 md:p-6 flex flex-col items-center justify-center">
                     <Tractor className="text-[#075A53] w-20 h-20" />
                     <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mt-4 text-center">
-                        No Farms Added
+                        {t("noFarmsAdded")}
                     </h2>
                     <p className="text-base md:text-lg text-gray-500 text-center mt-2 mb-6 leading-6 px-4">
-                        You currently have no farms. Start by adding your first farm to track
-                        and manage your fields efficiently.
+                        {t("noFarmsDesc")}
                     </p>
-                        <button onClick={() => navigate("/add-field")}
-                                className="bg-[#075A53] text-white font-semibold text-base md:text-lg px-6 py-3 rounded-lg hover:bg-emerald-900 transition-all ease-in-out duration-500 cursor-pointer">
-                        Add Farm
+                    <button
+                        onClick={() => navigate("/add-field")}
+                        className="bg-[#075A53] text-white font-semibold text-base md:text-lg px-6 py-3 rounded-lg hover:bg-emerald-900 transition-all ease-in-out duration-500 cursor-pointer"
+                    >
+                        {t("addFarm")}
                     </button>
                 </main>
             </div>

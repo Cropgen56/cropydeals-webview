@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCrops } from '../redux/slices/cropSlice';
 import { getMandiPrices } from '../redux/slices/mandiSlice';
-import { SearchIcon } from "../assets/Icons"
+import { SearchIcon } from "../assets/Icons";
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 const MandiRatesScreen = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   // From crops slice
   const { crops, loading: cropsLoading, error: cropsError } = useSelector(state => state.crops);
@@ -51,7 +53,7 @@ const MandiRatesScreen = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading crops...</p>
+          <p className="mt-4 text-gray-600">{t("loadingCrops")}</p>
         </div>
       </div>
     );
@@ -61,12 +63,12 @@ const MandiRatesScreen = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-red-500 mb-4">Failed to load crops</p>
+          <p className="text-red-500 mb-4">{t("failedLoadCrops")}</p>
           <button
             onClick={() => dispatch(fetchCrops())}
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
-            Retry
+            {t("retry")}
           </button>
         </div>
       </div>
@@ -78,29 +80,26 @@ const MandiRatesScreen = () => {
       {/* Top Navigation Bar */}
       <div className="bg-white border-b border-gray-200 shadow-sm ">
         <div className="container mx-auto px-4 py-3 flex items-center gap-25">
-          {/* Back Arrow (Visual Only - No Router Logic) */}
           <button
             onClick={() => { navigate("/") }}
             className="text-gray-800 p-1">←</button>
-          <h1 className="text-xl font-bold text-gray-900">Mandi Rate</h1>
-
-
+          <h1 className="text-xl font-bold text-gray-900">{t("mandiRate")}</h1>
         </div>
       </div>
 
-      {/* Search Bar (Visual Only - No Search Functionality) */}
+      {/* Search Bar */}
       <div className="container mx-auto px-4 py-3">
         <div className="relative flex justify-center">
           <input
             type="text"
-            placeholder="Search Crop"
+            placeholder={t("searchCrop")}
             className="w-[300px] py-2 px-4 pl-11 rounded-full border-[2px] border-gray-300 focus:outline-none focus:ring-4 focus:ring-green-500 focus:border-transparent"
             disabled={cropsLoading}
           />
         </div>
       </div>
 
-      {/* Crop Selection (Circular Avatars) */}
+      {/* Crop Selection */}
       <div className="bg-white border-b top-[78px] z-10 ">
         <div className="container mx-auto px-4 py-6" >
           <div className="flex gap-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 no-scrollbar px-2 py-1 ">
@@ -136,17 +135,17 @@ const MandiRatesScreen = () => {
           <div className="flex justify-center items-center py-20">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Fetching mandi prices...</p>
+              <p className="mt-4 text-gray-600">{t("fetchingMandiPrices")}</p>
             </div>
           </div>
         ) : mandiError ? (
           <div className="text-center py-20">
-            <p className="text-red-500 mb-4">Failed to load mandi prices</p>
+            <p className="text-red-500 mb-4">{t("failedLoadMandiPrices")}</p>
             <button
               onClick={() => selectedCrop && dispatch(getMandiPrices({ cropName: selectedCrop.name || selectedCrop.cropName }))}
               className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
-              Retry
+              {t("retry")}
             </button>
           </div>
         ) : mandiPrices && mandiPrices.length > 0 ? (
@@ -164,7 +163,6 @@ const MandiRatesScreen = () => {
                   className="bg-white rounded-lg shadow-sm border border-gray-100 p-4"
                 >
                   <div className="flex items-start gap-4">
-                    {/* Crop Thumbnail */}
                     <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                       <img
                         src={selectedCrop?.cropImage}
@@ -173,8 +171,6 @@ const MandiRatesScreen = () => {
                         onError={e => (e.target.src = 'https://via.placeholder.com/48')}
                       />
                     </div>
-
-                    {/* Crop/Market Details */}
                     <div className="flex-1">
                       <h3 className="font-bold text-[#075A53] text-lg">{cropName}</h3>
                       <p className="text-[12px] text-gray-500">
@@ -182,24 +178,21 @@ const MandiRatesScreen = () => {
                       </p>
                       <p className="text-[12px] text-gray-400 mt-1">{date}</p>
                     </div>
-
-                    {/* Price Information */}
                     <div className="flex flex-col items-end">
                       <div className="flex items-center gap-1 text-[10px] text-green-600">
                         <span>↑</span>
-                        <span>Max Price</span>
+                        <span>{t("maxPrice")}</span>
                         <span>₹{maxPrice}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-[10px]  text-red-600 mt-1">
+                      <div className="flex items-center gap-1 text-[10px] text-red-600 mt-1">
                         <span>↓</span>
-                        <span>Min Price</span>
+                        <span>{t("minPrice")}</span>
                         <span>₹{minPrice}</span>
                       </div>
-
                     </div>
                     <div className="mt-1 flex items-center gap-1 font-bold text-gray-800 text-[10px]">
                       <span>₹{modalPrice}</span>
-                      <span className="text-[10px] text-gray-500">/Q</span>
+                      <span className="text-[10px] text-gray-500">{t("perQuintal")}</span>
                     </div>
                   </div>
                 </div>
@@ -208,7 +201,7 @@ const MandiRatesScreen = () => {
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-gray-600 text-lg">No mandi prices available. Select a crop.</p>
+            <p className="text-gray-600 text-lg">{t("noMandiPrices")}</p>
           </div>
         )}
       </div>

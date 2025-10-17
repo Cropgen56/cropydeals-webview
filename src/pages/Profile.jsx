@@ -55,7 +55,7 @@ const Profile = () => {
                     <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
                         <img
                             src={farmer}
-                            alt="Profile"
+                            alt={t("profile")}
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -66,22 +66,19 @@ const Profile = () => {
                 {/* User Info */}
                 <div className="text-center mt-6">
                     <h2 className="text-2xl font-bold text-[#075a53]">
-                        <h2 className="text-2xl font-bold text-[#075a53]">
-                            {userData?.firstName && userData?.lastName
-                                ? `${userData.firstName} ${userData.lastName}`
-                                : userData?.firstName || "Name"}
-                        </h2>
-
+                        {userData?.firstName && userData?.lastName
+                            ? `${userData.firstName} ${userData.lastName}`
+                            : userData?.firstName || t("name")}
                     </h2>
                     <p className="text-gray-600 text-sm mt-1">
                         {userData?.email}
                     </p>
                 </div>
 
-             
+                {/* Fields Section */}
                 <div className="mt-10">
                     <h3 className="text-lg font-semibold mb-3 text-black">
-                        {t("fields") || "Fields"}
+                        {t("fields")}
                     </h3>
                     <div className="flex space-x-4 overflow-x-auto pb-2 no-scrollbar">
                         {fields && fields.length > 0 ? (
@@ -95,7 +92,7 @@ const Profile = () => {
                             ))
                         ) : (
                             <div className="text-gray-500 text-sm">
-                                {t("noFarmsAvailable") || "No farms available"}
+                                {t("noFarmsAvailable")}
                             </div>
                         )}
                     </div>
@@ -103,8 +100,10 @@ const Profile = () => {
 
                 {/* Footer */}
                 <div className="text-center text-gray-400 text-sm mt-10">
-                    <p>Copyright {new Date().getFullYear()} CropGen</p>
-                    <p className="mt-1">Version: 1.1.01</p>
+                    <p>
+                        {t("copyright")} {new Date().getFullYear()} CropGen
+                    </p>
+                    <p className="mt-1">{t("version")}: 1.1.01</p>
                 </div>
             </div>
         </div>
