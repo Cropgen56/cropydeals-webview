@@ -3,6 +3,7 @@ import { useSelector, shallowEqual } from "react-redux";
 import SoilMoistureIcon from "../../assets/image/farm-details/soil-moisture.svg";
 import SoilTempIcon from "../../assets/image/farm-details/soil-temperature.svg";
 import ChartImage from "../../assets/image/farm-details/chart.svg";
+import { useTranslation } from "react-i18next";
 
 const safeNum = (v) => {
   if (v === null || v === undefined) return null;
@@ -24,6 +25,7 @@ const pickFirst = (obj, keys) => {
 };
 
 const FarmDetailsMoistureTemperature = () => {
+  const {t} = useTranslation()
   const forecastRaw = useSelector(
     (state) => state.weather?.forecastData ?? null,
     shallowEqual
@@ -72,7 +74,7 @@ const FarmDetailsMoistureTemperature = () => {
           />
           <div className="flex flex-col items-start">
             <span className="text-[#D8F3DC] text-xs font-semibold">
-              Soil Temperature
+              {t("soilTemperature")}
             </span>
             <span className="text-white text-lg font-bold mt-1">
               {soilTemperatureDisplay}
@@ -88,7 +90,7 @@ const FarmDetailsMoistureTemperature = () => {
           />
           <div className="flex flex-col items-start">
             <span className="text-[#D8F3DC] text-xs font-semibold">
-              Soil Moisture
+              {t("soilMoisture")}
             </span>
             <span className="text-white text-lg font-bold mt-1">
               {soilMoistureDisplay}

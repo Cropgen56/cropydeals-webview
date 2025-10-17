@@ -35,8 +35,8 @@ const Header = () => {
 
       {/* Welcome Text */}
       <div className="absolute top-1/3 left-10 z-20 text-left">
-        <h1 className="text-lg sm:text-xl font-semibold">{t("welcome")}</h1>
-        <p className="text-xl sm:text-2xl font-bold">
+        <h1 className="text-2xl font-bold">{t("welcome")}</h1>
+        <p className="text-2xl font-bold">
           {loading ? "..." : user ? `${user.firstName} ${user.lastName}` : t("guest")}
         </p>
       </div>

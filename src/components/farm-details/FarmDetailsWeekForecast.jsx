@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const WEATHER_CONDITIONS = {
   rain: "🌧️",
@@ -27,11 +28,15 @@ const getWeatherIcon = (temperature, condition) => {
   return "⛅";
 };
 
-const getDayName = (date) =>
-  new Date(date).toLocaleDateString("en-US", { weekday: "short" });
+const getDayName = (date, locale) =>
+  new Intl.DateTimeFormat(locale, { weekday: "short" })
+    .format(new Date(date))
+    .toUpperCase();
 
-export default function FarmDetailsWeekForecast({ weekForecast = [] }) {
-  // Use local date in YYYY-MM-DD format
+export default function FarmDetailsWeekForecast({ weekForecast = [], locale }) {
+  const { t, i18n } = useTranslation();
+  const usedLocale = locale || i18n.language || "en-US";
+
   const todayDateStr = new Date().toLocaleDateString("en-CA");
 
   const normalized = useMemo(() => {
@@ -47,8 +52,8 @@ export default function FarmDetailsWeekForecast({ weekForecast = [] }) {
       else if (cloud >= 40) condition = "partly_cloudy";
 
       return {
-        day: getDayName(day.date),
-        date: day.date, // full local date for comparison
+        day: getDayName(day.date, usedLocale),
+        date: day.date,
         temp: Math.round(temp),
         icon: getWeatherIcon(temp, condition),
         precip: Math.round(precip),
@@ -59,7 +64,7 @@ export default function FarmDetailsWeekForecast({ weekForecast = [] }) {
   return (
     <div className="flex justify-between items-center text-center gap-2 overflow-x-auto no-scrollbar">
       {normalized.map((day, i) => {
-        const isToday = day.date === todayDateStr; // fixed: local date comparison
+        const isToday = day.date === todayDateStr;
         return (
           <div
             key={i}

@@ -1,37 +1,37 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const FERT_ITEMS = [
   {
     key: "urea_kg",
     symbol: "N",
     color: "#FCC21B",
-    name: "Urea",
-    desc: "Nitrogen",
+    name: "urea",
+    desc: "nitrogen",
   },
   {
     key: "dap_kg",
     symbol: "P",
     color: "#EC1C24",
-    name: "DAP",
-    desc: "Phosphorous",
+    name: "dap",
+    desc: "phosphorous",
   },
   {
     key: "mop_kg",
     symbol: "K",
     color: "#36A534",
-    name: "MOP",
-    desc: "Potassium",
+    name: "mop",
+    desc: "potassium",
   },
 ];
 
-const FertilizerRecommendation = ({
-  fertilizerPlan = {},
-  stageTarget = {},
-}) => {
+const FertilizerRecommendation = ({ fertilizerPlan = {}, stageTarget = {}, }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-3 mt-4">
       <h3 className="font-bold text-[#0E4D44] text-sm md:text-base">
-        Fertilizer Requirement{" "}
+        {t("fertilizerRequirement")}{" "}
       </h3>
 
       {FERT_ITEMS.map((item) => (
@@ -50,10 +50,10 @@ const FertilizerRecommendation = ({
 
           <div className="flex-1 flex flex-col gap-0.5">
             <span className="font-semibold text-sm md:text-base text-black">
-              {item.name}
+             {t(item.name)}
             </span>
             <span className="text-xs text-black font-medium">
-              {item.desc} ({stageTarget[item.symbol] ?? 0}%)
+             {t(item.desc)}  ({stageTarget[item.symbol] ?? 0}%)
             </span>
           </div>
 

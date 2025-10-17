@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const NutrientBar = ({ label, symbol, current = 0, required = 0 }) => {
+  const { t } = useTranslation();
   const max = Math.max(current, required, 1);
   const currentPct = Math.min(Math.round((current / max) * 100), 100);
   const requiredPct = Math.min(Math.round((required / max) * 100), 100);
@@ -38,8 +40,8 @@ const NutrientBar = ({ label, symbol, current = 0, required = 0 }) => {
 
       {/* Values */}
       <div className="flex-none w-24 text-right flex flex-col gap-0.5">
-        <span className="font-bold text-xs text-[#1B5E20]">{Math.round(current)} kg/acre</span>
-        <span className="text-xs text-[#9AA6A3]">{Math.round(required)} kg/acre</span>
+        <span className="font-bold text-xs text-[#1B5E20]">{Math.round(current)} kg/{t("acre")}</span>
+        <span className="text-xs text-[#9AA6A3]">{Math.round(required)} kg/{t("acre")}</span>
       </div>
     </div>
   );

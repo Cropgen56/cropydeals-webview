@@ -26,11 +26,11 @@ const MyFarm = () => {
       <p className="text-[#075a53] text-lg sm:text-xl font-semibold mb-3 ">
         {t("MyFarm")}
       </p>
-      <div className="flex items-center gap-4 overflow-x-auto pb-2 no-scrollbar">
+      <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
         {/* Add field card */}
         <div
           onClick={() => navigate("/add-field")}
-          className="min-w-[120px] h-[140px] sm:min-w-[160px] sm:h-[180px] border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col items-center text-center p-2 cursor-pointer hover:shadow-md"
+          className="min-w-[120px] h-[140px] sm:min-w-[160px] sm:h-[180px] border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col items-center text-center p-1 cursor-pointer hover:shadow-md"
         >
           <div className="bg-gray-200 h-[60%] w-full flex justify-center items-center rounded-t-md text-xs text-gray-600">
             {t("Add Field")}

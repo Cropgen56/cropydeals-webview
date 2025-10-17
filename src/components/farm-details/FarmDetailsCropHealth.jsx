@@ -2,12 +2,15 @@ import React from "react";
 import increaseRate from "../../assets/image/farm-details/increase-rate.svg";
 import FarmDetailsMap from "./FarmDetailsMap";
 import FarmDetailsIndex from "./FarmDetailsIndex";
+import Loading from "../common/Loader";
+import { useTranslation } from "react-i18next";
 
 function FarmDetailsCropHealth({ farm, loading }) {
+  const { t } = useTranslation();
   return (
     <section className="w-full flex flex-col gap-2 relative">
       <div className="flex justify-between items-center px-6 py-2">
-        <h2 className="text-xl font-bold text-[#075A53]">Crop Health</h2>
+        <h2 className="text-xl font-bold text-[#075A53]">{t("crop_health")}</h2>
         <div className="flex items-center gap-2">
           <img src={increaseRate} alt="Increase Rate" className="w-5 h-5" />
           <span className="text-[#28C878] font-semibold">0%</span>
@@ -28,14 +31,19 @@ function FarmDetailsCropHealth({ farm, loading }) {
         </div>
 
         <div className="flex justify-around mt-2 text-sm font-semibold text-[#075A53] pr-6">
-          <span>Healthy</span>
-          <span>Moderate</span>
-          <span>Low</span>
-          <span>Cloud</span>
+          <span>{t("healthy")}</span>
+          <span>{t("moderate")}</span>
+          <span>{t("low")}</span>
+          <span>{t("cloud")}</span>
         </div>
       </div>
 
       <div className="relative w-full h-[300px] sm:h-[400px]">
+        {/* {loading && (
+          <div className="absolute inset-0 z-[999] flex items-center justify-center bg-white/70">
+            <Loading />
+          </div>
+        )} */}
         <FarmDetailsMap coordinates={farm.field} />
         <div className="absolute bottom-0 left-0 w-full z-[999] shadow-[0_-4px_4px_0_#F8F8F840]">
           <FarmDetailsIndex farm={farm} loading={loading} />

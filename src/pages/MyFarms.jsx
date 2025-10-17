@@ -25,10 +25,7 @@ export default function MyFarms() {
   if (status === "loading") {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <Loader className="text-[#075A53] w-20 h-20 animate-spin" />
-        <h2 className="text-xl font-semibold mt-4 text-gray-700">
-          Loading your farms...
-        </h2>
+        <Loading />
       </div>
     );
   }

@@ -15,7 +15,7 @@ const Cropinformation = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-4">
+    <div className="px-4">
       {/* Section Title */}
       <h1 className="text-xl text-[#075A53] font-semibold">
         {t("crop Information")}

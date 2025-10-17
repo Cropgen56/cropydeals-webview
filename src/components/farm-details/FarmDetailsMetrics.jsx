@@ -1,10 +1,13 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function FarmDetailsMetrics({ cropHealth }) {
+    const { t } = useTranslation();
+
   const metrics = [
-    { label: "NDVI", value: cropHealth?.data?.NDVI_Mean?.toFixed(2) || "N/A" },
-    { label: "Moisture", value: cropHealth?.data?.Moisture || "N/A" },
-    { label: "SOC", value: cropHealth?.data?.SOC || "N/A" },
+    { label: t("ndvi"), value: cropHealth?.data?.NDVI_Mean?.toFixed(2) || t("na") },
+    { label: t("moisture"), value: cropHealth?.data?.Moisture || t("na") },
+    { label: t("soc"), value: cropHealth?.data?.SOC || t("na") },
   ];
 
   return (

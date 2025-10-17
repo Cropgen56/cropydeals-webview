@@ -10,42 +10,50 @@ import { useTranslation } from "react-i18next";
 export default function FarmDetailsGrowthTimeline() {
   const { t } = useTranslation();
 
-const stages = [
-  {
-    id: 1,
-    label: "Sowing",
-    active: true,
-    image: <img src={SowingImg} alt="sowing" className="w-7 h-7" />,
-  },
-  {
-    id: 2,
-    label: "Growth",
-    active: true,
-    image: <img src={GrowthImg} alt="growth" className="w-7 h-7" />,
-  },
-  {
-    id: 3,
-    label: "Flower",
-    active: true,
-    image: <img src={FlowerImg} alt="flower" className="w-7 h-7" />,
-  },
-  {
-    id: 4,
-    label: "Fruit",
-    active: false,
-    image: <img src={FruitImg} alt="fruit" className="w-7 h-7 object-contain" />,
-  },
-  {
-    id: 5,
-    label: "Harvest",
-    active: false,
-    image: <img src={HarvestImg} alt="harvest" className="w-7 h-7 object-contain" />,
-  },
-];
+  const stages = [
+    {
+      id: 1,
+      label: t("sowing"),
+      active: true,
+      image: <img src={SowingImg} alt="sowing" className="w-7 h-7" />,
+    },
+    {
+      id: 2,
+      label: t("growth"),
+      active: true,
+      image: <img src={GrowthImg} alt="growth" className="w-7 h-7" />,
+    },
+    {
+      id: 3,
+      label: t("flower"),
+      active: true,
+      image: <img src={FlowerImg} alt="flower" className="w-7 h-7" />,
+    },
+    {
+      id: 4,
+      label: t("fruit"),
+      active: false,
+      image: (
+        <img src={FruitImg} alt="fruit" className="w-7 h-7 object-contain" />
+      ),
+    },
+    {
+      id: 5,
+      label: t("harvest"),
+      active: false,
+      image: (
+        <img
+          src={HarvestImg}
+          alt="harvest"
+          className="w-7 h-7 object-contain"
+        />
+      ),
+    },
+  ];
 
   return (
     <section className="bg-white rounded-xl border border-[#D9D9D9] p-4 md:p-6 flex flex-col gap-3 md:gap-4">
-      <h3 className="text-xl font-bold text-[#075A53]">Growth Timeline</h3>
+      <h3 className="text-xl font-bold text-[#075A53]">{t("growth_timeline")}</h3>
 
       <div className="flex gap-4 md:justify-center overflow-x-auto items-center relative no-scrollbar">
         {stages.map((stage, index) => (

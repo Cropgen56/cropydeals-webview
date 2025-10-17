@@ -1,5 +1,6 @@
 import React from "react";
 import FarmerImg from "../../assets/image/farm-details/farmer.svg";
+import { useTranslation } from "react-i18next";
 
 const CommunityTipCard = ({ userName, tip, image }) => {
   return (
@@ -30,7 +31,7 @@ export default function FarmDetailsCommunity() {
   return (
     <section className="bg-white rounded-xl border border-[#D9D9D9] p-4 md:p-6 flex flex-col gap-3 md:gap-4">
       <h3 className="text-[#075A53] font-bold text-xl md:text-2xl">
-        Community Tips
+        
       </h3>
 
       {dummyTips.length > 0 ? (

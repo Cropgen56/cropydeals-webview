@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { ChevronRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetAdvisory, generateAdvisory } from "../../redux/slices/satelliteSlice";
+import { useTranslation } from "react-i18next";
 
 function FarmAdvisory({ farm, SoilMoisture }) {
   const [language, setLanguage] = useState("en");
@@ -11,6 +12,7 @@ function FarmAdvisory({ farm, SoilMoisture }) {
   const dispatch = useDispatch();
   const { Advisory, cropGrowthStage, isLoading } = useSelector(state => state.satellite);
   const { forecastData } = useSelector(state => state.weather);
+  const { t } = useTranslation();
 
   const bbchStage = cropGrowthStage?.finalStage?.bbch;
   const currentWeather = forecastData?.current;
@@ -148,10 +150,10 @@ function FarmAdvisory({ farm, SoilMoisture }) {
 
   // Show loading if API is in progress or language is loading
   const loading = isLanguageLoading || isLoading?.Advisory;
-  if (loading) return <p>Loading advisory...</p>;
+  if (loading) return <p>{t("loading_advisory")}</p>;
 
   // Show message if advisory is empty
-  if (advisoryArray.length === 0) return <p>No advisory available</p>;
+  if (advisoryArray.length === 0) return <p>{t("no_advisory_available")}</p>;
 
   const current = advisoryArray[currentIndex];
   const keys = ["disease_pest", "spray", "fertigation", "water", "monitoring"];
@@ -172,7 +174,7 @@ function FarmAdvisory({ farm, SoilMoisture }) {
         {keys.map(key =>
           current[key] ? (
             <div key={key} className="mb-3">
-              <p className="text-[#075A53] text-sm font-bold capitalize">{key.replace("_", " ")}</p>
+              <p className="text-[#075A53] text-sm font-bold capitalize">{t(key)}</p>
               <p className="text-[#263238] text-sm leading-5">{current[key]}</p>
             </div>
           ) : null

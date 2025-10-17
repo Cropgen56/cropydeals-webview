@@ -16,7 +16,7 @@ const MandiRate = () => {
   ];
 
   return (
-    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-5 mx-4 mt-6">
+    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-5 mx-4">
       {/* Header */}
       <div className="flex justify-between items-start sm:items-center mb-5">
         <div>

@@ -9,7 +9,7 @@ import SoilHealthReport from "../components/soilhealth/Soilhealth";
 
 const Homepage = () => {
   return (
-    <div className="w-full h-full bg-[#f8f8f8] flex flex-col items-center relative font-sans">
+    <div className="w-full h-full bg-[#f8f8f8] flex flex-col gap-4 items-center relative font-sans">
       <div className="w-full relative">
         <Header />
       </div>
@@ -21,7 +21,7 @@ const Homepage = () => {
         <MyFarm fields={[]} />
       </div>
 
-      <div className="w-full mt-4">
+      <div className="w-full">
         <Cropinformation />
       </div>
 

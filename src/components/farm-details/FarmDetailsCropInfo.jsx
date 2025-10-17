@@ -4,8 +4,11 @@ import FarmDetailsMetrics from "./FarmDetailsMetrics";
 import { useDispatch, useSelector } from "react-redux";
 import { calculateAiYield } from "../../redux/slices/satelliteSlice";
 import { fetchCrops } from "../../redux/slices/cropSlice";
+import { useTranslation } from "react-i18next";
 
 function FarmDetailsCropInfo({ farm }) {
+  const { t } = useTranslation();
+
   const { cropHealth, cropYield } = useSelector(
     (state) => state.satellite || {}
   );
@@ -44,14 +47,15 @@ function FarmDetailsCropInfo({ farm }) {
 
   const getHealthColor = (status) => {
     switch (status) {
-      case "Poor":
-      case "Bad":
+      case t("poor"):
         return "#EC1C24";
-      case "Normal":
+      case t("bad"):
+        return "#EC1C24";
+      case t("normal"):
         return "#FCC21B";
-      case "Good":
+      case t("good"):
         return "#36A534";
-      case "Very Good":
+      case t("very_good"):
         return "#075A53";
       default:
         return "#9A9898";
@@ -83,40 +87,40 @@ function FarmDetailsCropInfo({ farm }) {
       <div className="flex items-center gap-4 sm:gap-8 sm:mx-8">
         <img
           src={cropImage}
-          alt={farm?.cropName || "Crop"}
+          alt={farm?.cropName || t("crop_name")}
           className="w-[100px] h-[100px] rounded-lg border-2 border-[#075A53] object-contain"
         />
         <div className="flex flex-col flex-1 gap-1">
           <div className="flex">
             <span className="text-xs sm:text-base font-bold text-[#344E41] w-1/2 sm:w-1/3">
-              Crop Name
+              {t("crop_name")}
             </span>
             <span className="text-xs sm:text-base font-semibold text-black">
-              : {farm?.cropName || "N/A"}
+              : {farm?.cropName || t("na")}
             </span>
           </div>
           <div className="flex">
             <span className="text-xs sm:text-base font-bold text-[#344E41] w-1/2 sm:w-1/3">
-              Crop Age
+             {t("crop_age")}
             </span>
             <span className="text-xs sm:text-base font-semibold text-black">
-              : {calculateDaysFromDate(farm?.sowingDate)} days
+              : {calculateDaysFromDate(farm?.sowingDate)} {t("days")}
             </span>
           </div>
           <div className="flex">
             <span className="text-xs sm:text-base font-bold text-[#344E41] w-1/2 sm:w-1/3">
-              Standard Yield
+              {t("standard_yield")}
             </span>
             <span className="text-xs sm:text-base font-semibold text-black">
-              : {cropYield?.data?.standard_yield ?? "N/A"}
+              : {cropYield?.data?.standard_yield ?? t("na")}
             </span>
           </div>
           <div className="flex">
             <span className="text-xs sm:text-base font-bold text-[#344E41] w-1/2 sm:w-1/3">
-              Total Area
+              {t("total_area")}
             </span>
             <span className="text-xs sm:text-base font-semibold text-black">
-              : {farm?.acre?.toFixed(2)} Acre
+              : {farm?.acre?.toFixed(2)} {t("acre")}
             </span>
           </div>
         </div>
@@ -124,7 +128,7 @@ function FarmDetailsCropInfo({ farm }) {
 
       <div className="sm:mx-8">
         <h3 className="text-xs sm:text-base font-bold text-[#344E41] mb-2">
-          Overall Crop Health
+          {t("overall_crop_health")}
         </h3>
 
         <div className="flex justify-between items-center mb-2">

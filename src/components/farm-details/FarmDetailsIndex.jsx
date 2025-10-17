@@ -4,6 +4,7 @@ import CalendarGreen from "../../assets/image/farm-details/calender-green.svg";
 import { useDispatch, useSelector } from "react-redux";
 import makePolygonCoordinates from "../../utils/makePolygonCoordinates ";
 import { fetchIndexData } from "../../redux/slices/satelliteSlice";
+import { useTranslation } from "react-i18next";
 
 const indexKeys = [
   "TRUE_COLOR",
@@ -19,6 +20,7 @@ const indexKeys = [
   "NDRE",
   "NITROGEN",
   "SOC",
+  "SUCROSEINDEX",
   "RECI",
 ];
 
@@ -28,6 +30,7 @@ const FarmDetailsIndex = ({ farm, loading }) => {
     (state) => state.satellite || {}
   );
   const { field, sowingDate } = farm || {};
+  const { t } = useTranslation();
 
   const coordinates = makePolygonCoordinates(field);
   const [selectedIndex, setSelectedIndex] = useState("NDVI");
@@ -78,7 +81,7 @@ const FarmDetailsIndex = ({ farm, loading }) => {
 
   return (
     <div className="flex flex-col w-full bg-[#075A53] rounded-t-2xl p-3">
-      <div className="flex justify-between overflow-x-auto no-scrollbar lg:mx-8">
+      <div className="flex justify-between whitespace-nowrap overflow-x-auto no-scrollbar lg:mx-8">
         {indexKeys.map((item) => (
           <button
             key={item}
@@ -89,7 +92,7 @@ const FarmDetailsIndex = ({ farm, loading }) => {
                 : "text-[#D9D9D9]"
             }`}
           >
-            {item}
+            {t(`indices.${item}`, item)}
           </button>
         ))}
       </div>
@@ -130,8 +133,8 @@ const FarmDetailsIndex = ({ farm, loading }) => {
               >
                 {/* {cloud}% Cloud */}
                 {cloud !== null && cloud !== "-"
-                  ? `${formatCloud(cloud)}% Cloud`
-                  : `- Cloud`}
+                  ? `${formatCloud(cloud)}% ${t("cloud")}`
+                  : `- ${t("cloud")}`}
               </span>
             </button>
           );

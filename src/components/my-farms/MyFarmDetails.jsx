@@ -68,8 +68,8 @@ function MyFarmDetails({ farm }) {
 
 const DetailRow = ({ label, value }) => (
     <div className="flex justify-between">
-        <span className="text-gray-600 font-semibold text-[15px]">{label}</span>
-        <span className="text-[#A2A2A2] font-medium text-sm">{value}</span>
+        <span className="text-gray-800 font-semibold text-[15px]">{label}</span>
+        <span className="text-gray-600 font-medium text-sm">{value}</span>
     </div>
 );
 
