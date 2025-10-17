@@ -112,7 +112,7 @@ const UpdateFarmDetails = ({
       setIsSubmitting(false);
       if (res?.payload?.success) {
         alert("Farm updated successfully");
-        navigate("/farm-details", { state: res?.payload?.farmField });
+        navigate("/my-farms");
       }
     });
   };

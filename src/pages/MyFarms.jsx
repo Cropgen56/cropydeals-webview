@@ -5,6 +5,7 @@ import MyFarmDetails from "../components/my-farms/MyFarmDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { getFarmFields } from "../redux/slices/farmSlice";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/common/Loader";
 
 export default function MyFarms() {
     const dispatch = useDispatch();
@@ -22,10 +23,7 @@ export default function MyFarms() {
     if (status === "loading") {
             return (
                 <div className="flex flex-col items-center justify-center min-h-screen">
-                    <Loader className="text-[#075A53] w-20 h-20 animate-spin" />
-                    <h2 className="text-xl font-semibold mt-4 text-gray-700">
-                        Loading your farms...
-                    </h2>
+                    <Loading />
                 </div>
             );
     }
@@ -57,7 +55,10 @@ export default function MyFarms() {
         <div className="flex flex-col bg-[#F8F8F8] min-h-screen">
             <MyFarmHeader />
             <main className="p-4 md:p-6 flex flex-col gap-4">
-                {fields.map((farm) => (
+                {/* {fields.map((farm) => ( */}
+                {[...fields]
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .map((farm) => (
                     <MyFarmDetails key={farm._id} farm={farm} />
                 ))}
             </main>

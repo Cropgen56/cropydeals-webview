@@ -9,7 +9,7 @@ function FarmDetailsCropInfo({ farm }) {
   const { cropHealth, cropYield } = useSelector(
     (state) => state.satellite || {}
   );
-  const { crops } = useSelector((state) => state.crop || {});
+  const crops = useSelector((state) => state.crops.crops);
   const dispatch = useDispatch();
 
   const [cropImage, setCropImage] = useState(CropImg);
@@ -84,7 +84,7 @@ function FarmDetailsCropInfo({ farm }) {
         <img
           src={cropImage}
           alt={farm?.cropName || "Crop"}
-          className="w-[100px] h-[100px] rounded-lg border-2 border-[#075A53] object-cover"
+          className="w-[100px] h-[100px] rounded-lg border-2 border-[#075A53] object-contain"
         />
         <div className="flex flex-col flex-1 gap-1">
           <div className="flex">
