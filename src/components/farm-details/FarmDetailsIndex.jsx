@@ -4,7 +4,6 @@ import CalendarGreen from "../../assets/image/farm-details/calender-green.svg";
 import { useDispatch, useSelector } from "react-redux";
 import makePolygonCoordinates from "../../utils/makePolygonCoordinates ";
 import { fetchIndexData } from "../../redux/slices/satelliteSlice";
-import { Cloud } from "lucide-react";
 
 const indexKeys = [
   "TRUE_COLOR",

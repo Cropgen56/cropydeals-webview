@@ -13,7 +13,11 @@ import FarmDetailsMarketPrice from "../components/farm-details/FarmDetailsMarket
 import FarmDetailsCommunity from "../components/farm-details/FarmDetailsCommunity";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { fetchCropHealth, fetchDatesData, resetState } from "../redux/slices/satelliteSlice";
+import {
+  fetchCropHealth,
+  fetchDatesData,
+  resetState,
+} from "../redux/slices/satelliteSlice";
 
 const MemoizedFarmDetailsHeader = memo(FarmDetailsHeader);
 const MemoizedFarmDetailsCropHealth = memo(FarmDetailsCropHealth);
@@ -27,7 +31,7 @@ const MemoizedFarmDetailsCropProtection = memo(FarmDetailsCropProtection);
 const MemoizedFarmDetailsMarketPrice = memo(FarmDetailsMarketPrice);
 const MemoizedFarmDetailsCommunity = memo(FarmDetailsCommunity);
 import makePolygonCoordinates from "../utils/makePolygonCoordinates ";
-import {formatToYYYYMMDD} from "../utils/convertYYYYMMDD"
+import { formatToYYYYMMDD, getSixMonthsBefore } from "../utils/convertYYYYMMDD";
 import { createAOI, fetchAOIs } from "../redux/slices/weatherSlice";
 
 function FarmDetails() {
@@ -52,12 +56,13 @@ function FarmDetails() {
 
         const availabilityPayload = {
           geometry,
-          start_date: farmData?.sowingDate,
-          end_date: formatToYYYYMMDD(new Date()),
+          start_date: getSixMonthsBefore(farmData?.sowingDate),
+          end_date: new Date().toISOString().split("T")[0],
           provider: "both",
           satellite: "s2",
         };
 
+        console.log(availabilityPayload);
         await dispatch(fetchDatesData(availabilityPayload));
         await dispatch(fetchCropHealth(polygonCoords));
       } catch (error) {
