@@ -23,7 +23,7 @@ const MyFarm = () => {
 
   return (
     <div className=" font-sans z-10 relative">
-      <p className="text-[#075a53] text-lg sm:text-xl font-semibold mb-3 ">
+      <p className="text-[#075a53] text-xl font-semibold mb-3 ">
         {t("MyFarm")}
       </p>
       <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
@@ -32,7 +32,7 @@ const MyFarm = () => {
           onClick={() => navigate("/add-field")}
           className="min-w-[120px] h-[140px] sm:min-w-[160px] sm:h-[180px] border border-gray-200 rounded-lg bg-white shadow-sm flex flex-col items-center text-center p-1 cursor-pointer hover:shadow-md"
         >
-          <div className="bg-gray-200 h-[60%] w-full flex justify-center items-center rounded-t-md text-xs text-gray-600">
+          <div className="bg-gray-200 h-[60%] w-full flex justify-center items-center rounded-t-md text-base text-gray-600">
             {t("Add Field")}
           </div>
           <div className="flex justify-between items-center w-full mt-2">

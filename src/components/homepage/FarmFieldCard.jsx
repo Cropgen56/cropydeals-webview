@@ -22,18 +22,18 @@ const FarmFieldCard = ({ cropName, farmDetails, acre }) => {
       <div className="flex justify-between items-center px-1 sm:px-2 mt-2">
         <div className="flex flex-col text-left overflow-hidden">
           <p
-            className="text-[10px] sm:text-sm font-semibold text-[#075a53] truncate max-w-[80px] sm:max-w-[110px]"
+            className="text-xs sm:text-sm font-semibold text-[#075a53] truncate max-w-[80px] sm:max-w-[110px]"
             title={cropName}
           >
-            {cropName}
+            {/* {t(`crops.${cropName}`, cropName)}; */} {cropName}
           </p>
-          <small className="text-[9px] sm:text-xs text-[#344e41] whitespace-nowrap">
+          <small className="text-[10px] sm:text-xs text-[#344e41] whitespace-nowrap">
             {`${t("acre")}: ${acre?.toFixed(2)}`}
           </small>
         </div>
 
         <div className="bg-[#075a53] text-white rounded-full w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] flex items-center justify-center flex-shrink-0">
-          <ArrowIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <ArrowIcon className="w-4 h-4" />
         </div>
       </div>
     </div>

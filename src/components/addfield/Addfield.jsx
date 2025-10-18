@@ -25,6 +25,7 @@ import UpdateFarmDetails from "./UpdateFarmDetails";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 import "leaflet-geosearch/dist/geosearch.css";
 import { getCityState } from "../../utils/getUserLocation";
+import { useTranslation } from "react-i18next";
 
 // --- Updated geolocation helper with retry ---
 export const getCurrentLocation = ({ setLocation, retries = 3 }) => {
@@ -58,6 +59,8 @@ export const getCurrentLocation = ({ setLocation, retries = 3 }) => {
 const AddFieldMap = ({ setIsSubmitting }) => {
   const data = useLocation();
   const farmDetails = data.state;
+  const { t } = useTranslation();  
+  
 
   const [markers, setMarkers] = useState([]);
   const [isAddingMarkers, setIsAddingMarkers] = useState(false);
@@ -111,14 +114,14 @@ const AddFieldMap = ({ setIsSubmitting }) => {
 
   const toggleForm = () => {
     if (markers.length >= 3) setIsOpen(!isOpen);
-    else alert("Please complete the field first!");
+    else alert(t("please_complete_field_first"));
   };
 
   const clearMarkers = () => setMarkers([]);
   const removeLastMarker = () => {
     setMarkers((currentMarkers) => {
       if (currentMarkers.length === 0) {
-        alert("No markers left to remove.");
+        alert(t("no_markers_left_to_remove"));
         return currentMarkers;
       }
       return currentMarkers.slice(0, -1);
@@ -217,7 +220,7 @@ const AddFieldMap = ({ setIsSubmitting }) => {
   if (locationError)
     return (
       <div className="h-screen flex items-center justify-center text-red-600">
-        Unable to fetch your location. Please enable location services or move to an open area.
+        {t("unable_to_fetch_location")}
       </div>
     );
 
@@ -252,7 +255,7 @@ const AddFieldMap = ({ setIsSubmitting }) => {
                 icon={yellowMarkerIcon}
               >
                 <Popup>
-                  Marker at [{marker.lat.toFixed(4)}, {marker.lng.toFixed(4)}]
+                  {t("marker_at")} [{marker.lat.toFixed(4)}, {marker.lng.toFixed(4)}]
                 </Popup>
               </Marker>
             ))}

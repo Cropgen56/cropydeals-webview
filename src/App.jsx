@@ -24,11 +24,13 @@ function App() {
 
 
   useEffect(() => {
-    const lang = "en";
+    // const lang = "en";
+    const lang = localStorage.getItem("language") || "en";
+
     i18n.changeLanguage(lang);
     localStorage.setItem("language", lang);
 
-    let phone = searchParams.get("phone");
+    let phone = searchParams.get("phone")?.trim();
     const email = searchParams.get("email")?.trim();
     const firstName = searchParams.get("firstName")?.trim();
     const lastName = searchParams.get("lastName")?.trim();
@@ -50,10 +52,10 @@ function App() {
       }
     }
 
-    const existingToken = localStorage.getItem("accessToken");
+    // const existingToken = localStorage.getItem("accessToken");
 
-    if (!existingToken && phone && email && firstName && lastName) {
-      // Validate inputs 
+    if (phone && email && firstName && lastName) {
+      // Validate inputs
       if (!phone || !isValidPhone(phone)) {
         console.error("❌ Invalid phone number format:", phone);
         return;
@@ -73,6 +75,11 @@ function App() {
         console.error("❌ Invalid last name:", lastName);
         return;
       }
+
+       // Clear old token to replace with new login
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
+
       // console.log("Params received:", { phone, email, firstName, lastName });
       dispatch(registerLoginUser({ phone, email, firstName, lastName }));
       navigate("/", { replace: true });

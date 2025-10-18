@@ -76,17 +76,17 @@ const AddFieldDetails = ({
       field.farmName.trim() === ""
     ) {
       valid = false;
-      alert("Farm Name is required and must be a string.");
+      alert(t("farm_name_required"));
     }
 
     if (!field.cropName) {
       valid = false;
-      alert("Please select a crop.");
+      alert(t("please_select_crop"));
     }
 
     if (!field.sowingDate || isNaN(Date.parse(field.sowingDate))) {
       valid = false;
-      alert("Sowing Date is required.");
+      alert(t("sowing_date_required"));
     }
 
     if (
@@ -95,24 +95,24 @@ const AddFieldDetails = ({
       field.variety.trim() === ""
     ) {
       valid = false;
-      alert("Variety is required .");
+      alert(t("variety_required"));
     }
 
     if (!field.irrigation) {
       valid = false;
-      alert("Please select an irrigation type.");
+      alert(t("please_select_irrigation_type"));
     } else if (
       !["open-irrigation", "drip-irrigation", "sprinkler"].includes(
         field.irrigation
       )
     ) {
       valid = false;
-      alert("Invalid irrigation type selected.");
+      alert(t("invalid_irrigation_type"));
     }
 
     if (!field.typeOfFarming) {
       valid = false;
-      alert("Please select a Type of Farming.");
+      alert(t("please_select_farming_type"));
     }
 
     return valid;
@@ -157,17 +157,17 @@ const AddFieldDetails = ({
       ).unwrap();
 
       if (res?.success) {
-        alert("Farm added successfully!");
+        alert(t("farm_added_successfully"));
         setIsSubmitting(false);
         toggleForm();
         navigate("/my-farms");
       } else {
-        alert(res?.message || "Something went wrong!");
+        alert(res?.message ||t("something_went_wrong"));
         setIsSubmitting(false);
       }
     } catch (err) {
       console.error("Add farm field error:", err);
-      alert(err?.message || "Failed to add farm field");
+      alert(err?.message || t("failed_to_add_farm_field"));
       setIsSubmitting(false);
     }
   };
@@ -233,7 +233,7 @@ const AddFieldDetails = ({
                     htmlFor="farmName"
                     className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                   >
-                    Farm Name
+                    {t("farm_name")}
                   </label>
                   <input
                     type="text"
@@ -250,7 +250,7 @@ const AddFieldDetails = ({
                     htmlFor="cropName"
                     className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                   >
-                    Crop Name
+                    {t("crop_name")}
                   </label>
                   <select
                     id="cropName"
@@ -259,9 +259,12 @@ const AddFieldDetails = ({
                     onChange={handleInputChange}
                     className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                   >
+                    <option value="" disabled>
+                   {t("select_crop")}
+                  </option>
                     {cropsLoading && (
                       <option value="" disabled>
-                        Loading crops...
+                        {t("loading_crops")}
                       </option>
                     )}
                     {crops &&
@@ -279,7 +282,7 @@ const AddFieldDetails = ({
                     htmlFor="sowingDate"
                     className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                   >
-                    Sowing Date
+                    {t("sowing_date")}
                   </label>
                   <input
                     type="date"
@@ -295,7 +298,7 @@ const AddFieldDetails = ({
                     htmlFor="variety"
                     className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                   >
-                    Variety
+                    {t("variety")}
                   </label>
                   <input
                     type="text"
@@ -312,7 +315,7 @@ const AddFieldDetails = ({
                     htmlFor="irrigation"
                     className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                   >
-                    Type of irrigation
+                    {t("type_of_irrigation")}
                   </label>
                   <select
                     id="irrigation"
@@ -322,11 +325,11 @@ const AddFieldDetails = ({
                     className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                   >
                     <option value="" disabled>
-                      Select Irrigation
+                      {t("select_irrigation")}
                     </option>
-                    <option value="drip-irrigation">Drip-irrigation</option>
-                    <option value="sprinkler">Sprinkler</option>
-                    <option value="open-irrigation">Open-irrigation</option>
+                    <option value="drip-irrigation">{t("drip_irrigation")}</option>
+                    <option value="sprinkler">{t("sprinkler")}</option>
+                    <option value="open-irrigation">{t("open_irrigation")}</option>
                   </select>
 
                   {/* Type of Farming */}
@@ -334,7 +337,7 @@ const AddFieldDetails = ({
                     htmlFor="farming"
                     className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                   >
-                    Type of farming
+                    {t("type_of_farming")}
                   </label>
                   <select
                     id="farming"
@@ -344,11 +347,11 @@ const AddFieldDetails = ({
                     className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                   >
                     <option value="" disabled>
-                      Select Farming
+                      {t("select_farming")}
                     </option>
-                    <option value="Organic">Organic</option>
-                    <option value="Inorganic">Inorganic</option>
-                    <option value="Integrated">Integrated</option>
+                    <option value="Organic">{t("organic")}</option>
+                    <option value="Inorganic">{t("inorganic")}</option>
+                    <option value="Integrated">{t("integrated")}</option>
                   </select>
                 </div>
               </div>
@@ -357,7 +360,7 @@ const AddFieldDetails = ({
                 type="submit"
                 className="w-full p-2.5 bg-[#075a53] text-white text-base border-none rounded-[5px] font-semibold hover:bg-[#064d47] transition-all ease-in-out duration-500 cursor-pointer mt-4"
               >
-                Save Farm
+                {t("save_farm")}
               </button>
             </form>
           </div>

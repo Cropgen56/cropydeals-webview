@@ -52,6 +52,7 @@ const UpdateFarmDetails = ({
       });
     }
   }, [centroid]);
+  
 
   const [field, setField] = useState({
     farmName: farmDetails?.fieldName || "",
@@ -71,23 +72,23 @@ const UpdateFarmDetails = ({
   const validateForm = () => {
     let valid = true;
     if (!field.farmName.trim()) {
-      alert("Farm Name is required");
+      alert(t("farm_name_required"));
       valid = false;
     }
     if (!field.cropName) {
-      alert("Please select a crop");
+      alert(t("please_select_crop"));
       valid = false;
     }
     if (!field.sowingDate) {
-      alert("Sowing Date is required");
+      alert(t("sowing_date_required"));
       valid = false;
     }
     if (!field.variety.trim()) {
-      alert("Variety is required");
+      alert(t("variety_required"));
       valid = false;
     }
     if (!field.irrigation) {
-      alert("Select irrigation type");
+      alert(t("please_select_irrigation_type"));
       valid = false;
     }
     return valid;
@@ -111,15 +112,17 @@ const UpdateFarmDetails = ({
     ).then((res) => {
       setIsSubmitting(false);
       if (res?.payload?.success) {
-        alert("Farm updated successfully");
+        alert(t("farm_updated_successfully"));
         navigate("/my-farms");
+      } else {
+        alert(t("something_went_wrong"));
       }
     });
   };
 
   const handleDelete = () => {
     dispatch(deleteFarmField({ farmId: farmDetails?._id })).then(() => {
-      alert("Farm deleted successfully");
+      alert(t("farm_deleted_successfully"));
       navigate("/");
     });
   };
@@ -151,7 +154,7 @@ const UpdateFarmDetails = ({
                 <MyFarmColorIcon />
               </div>
               <div>
-                <h3 className="m-0 text-2xl">Update Farm</h3>
+                <h3 className="m-0 text-2xl">{t("update_farm")}</h3>
                 <p className="m-0 text-gray-500 text-[0.9rem]">
                   {city}, {state}
                 </p>
@@ -175,7 +178,7 @@ const UpdateFarmDetails = ({
               <div>
                 <img
                   src={FarmImage}
-                  alt="Farm"
+                  alt={t("farm_name")}
                   className="w-full h-full rounded-lg"
                 />
               </div>
@@ -187,7 +190,7 @@ const UpdateFarmDetails = ({
                   htmlFor="farmName"
                   className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                 >
-                  Farm Name
+                  {t("farm_name")}
                 </label>
                 <input
                   type="text"
@@ -195,7 +198,7 @@ const UpdateFarmDetails = ({
                   name="farmName"
                   value={field.farmName}
                   onChange={handleInputChange}
-                  placeholder="Type farm name"
+                  placeholder={t("farm_name")}
                   className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                 />
 
@@ -204,7 +207,7 @@ const UpdateFarmDetails = ({
                   htmlFor="cropName"
                   className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                 >
-                  Crop Name
+                  {t("crop_name")}
                 </label>
                 <select
                   id="cropName"
@@ -214,11 +217,11 @@ const UpdateFarmDetails = ({
                   className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                 >
                   <option value="" disabled>
-                    Select Crop
+                    {t("select_crop")}
                   </option>
                   {cropsLoading && (
                     <option value="" disabled>
-                      Loading crops...
+                      {t("loading_crops")}
                     </option>
                   )}
 
@@ -227,7 +230,12 @@ const UpdateFarmDetails = ({
                       .sort((a, b) => a.cropName.localeCompare(b.cropName))
                       .map((crop) => (
                         <option key={crop._id} value={crop._id}>
-                          {crop.cropName}
+                          {t(
+                            `crops.${crop.cropName
+                              .toLowerCase()
+                              .replace(/\s/g, "_")}`,
+                            crop.cropName
+                          )}
                         </option>
                       ))}
                 </select>
@@ -237,7 +245,7 @@ const UpdateFarmDetails = ({
                   htmlFor="sowingDate"
                   className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                 >
-                  Sowing Date
+                  {t("sowing_date")}
                 </label>
                 <input
                   type="date"
@@ -253,7 +261,7 @@ const UpdateFarmDetails = ({
                   htmlFor="variety"
                   className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                 >
-                  Variety
+                  {t("variety")}
                 </label>
                 <input
                   type="text"
@@ -261,7 +269,7 @@ const UpdateFarmDetails = ({
                   name="variety"
                   value={field.variety}
                   onChange={handleInputChange}
-                  placeholder="Type variety"
+                  placeholder={t("variety")}
                   className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                 />
 
@@ -270,7 +278,7 @@ const UpdateFarmDetails = ({
                   htmlFor="irrigation"
                   className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                 >
-                  Type of irrigation
+                  {t("type_of_irrigation")}
                 </label>
                 <select
                   id="irrigation"
@@ -280,11 +288,15 @@ const UpdateFarmDetails = ({
                   className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                 >
                   <option value="" disabled>
-                    Select Irrigation
+                    {t("select_irrigation")}
                   </option>
-                  <option value="drip-irrigation">Drip-irrigation</option>
-                  <option value="sprinkler">Sprinkler</option>
-                  <option value="open-irrigation">Open-irrigation</option>
+                  <option value="drip-irrigation">
+                    {t("drip_irrigation")}
+                  </option>
+                  <option value="sprinkler">{t("sprinkler")}</option>
+                  <option value="open-irrigation">
+                    {t("open_irrigation")}
+                  </option>
                 </select>
 
                 {/* Type of Farming */}
@@ -292,7 +304,7 @@ const UpdateFarmDetails = ({
                   htmlFor="farming"
                   className="mb-0.5 text-[0.9rem] text-[#9a9898]"
                 >
-                  Type of farming
+                  {t("type_of_farming")}
                 </label>
                 <select
                   id="farming"
@@ -302,11 +314,11 @@ const UpdateFarmDetails = ({
                   className="mb-[5px] p-[5px] border-[1.5px] border-[#075a53] rounded-[5px] focus:outline-none focus:ring-2 focus:ring-[#075a53]"
                 >
                   <option value="" disabled>
-                    Select Farming
+                    {t("select_farming")}
                   </option>
-                  <option value="Organic">Organic</option>
-                  <option value="Inorganic">Inorganic</option>
-                  <option value="Integrated">Integrated</option>
+                  <option value="Organic">{t("organic")}</option>
+                  <option value="Inorganic">{t("inorganic")}</option>
+                  <option value="Integrated">{t("integrated")}</option>
                 </select>
               </div>
             </div>
@@ -318,14 +330,14 @@ const UpdateFarmDetails = ({
                 onClick={handleDelete}
                 className="flex items-center gap-1 w-full p-2.5 bg-red-600 text-white text-base border-none rounded-[5px] font-semibold hover:bg-red-700 transition-all ease-in-out duration-500 cursor-pointer"
               >
-                <Trash2 size={24} color="#fff" /> Delete Farm
+                <Trash2 size={24} color="#fff" /> {t("delete_farm")}
               </button>
 
               <button
                 type="submit"
                 className="flex items-center gap-1 w-full p-2.5 bg-[#075a53] text-white text-base border-none rounded-[5px] font-semibold hover:bg-[#064d47] transition-all ease-in-out duration-500 cursor-pointer"
               >
-                <RefreshCcw size={24} color="#fff" /> Update Farm
+                <RefreshCcw size={24} color="#fff" /> {t("update_farm")}
               </button>
             </div>
           </form>
