@@ -223,11 +223,13 @@ const UpdateFarmDetails = ({
                   )}
 
                   {crops &&
-                    crops.map((crop) => (
-                      <option key={crop._id} value={crop._id}>
-                        {crop.cropName}
-                      </option>
-                    ))}
+                    [...crops]
+                      .sort((a, b) => a.cropName.localeCompare(b.cropName))
+                      .map((crop) => (
+                        <option key={crop._id} value={crop._id}>
+                          {crop.cropName}
+                        </option>
+                      ))}
                 </select>
 
                 {/* Sowing Date */}

@@ -264,13 +264,14 @@ const AddFieldDetails = ({
                         Loading crops...
                       </option>
                     )}
-
                     {crops &&
-                      crops.map((crop) => (
-                        <option key={crop._id} value={crop.cropName}>
-                          {crop.cropName}
-                        </option>
-                      ))}
+                      [...crops]
+                        .sort((a, b) => a.cropName.localeCompare(b.cropName))
+                        .map((crop) => (
+                          <option key={crop._id} value={crop.cropName}>
+                            {crop.cropName}
+                          </option>
+                        ))}
                   </select>
 
                   {/* Sowing Date */}

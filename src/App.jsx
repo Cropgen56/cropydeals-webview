@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerLoginUser } from "./redux/slices/authSlice";
 import { useTranslation } from "react-i18next";
@@ -19,23 +19,65 @@ import Profile from "./pages/Profile";
 function App() {
   const dispatch = useDispatch();
   const { i18n } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const lang = "en";
     i18n.changeLanguage(lang);
     localStorage.setItem("language", lang);
 
-    const phone = "+919876543210";
-    const email = "john.doe@example.com";
-    const firstName = "John";
-    const lastName = "Doe";
+    let phone = searchParams.get("phone");
+    const email = searchParams.get("email")?.trim();
+    const firstName = searchParams.get("firstName")?.trim();
+    const lastName = searchParams.get("lastName")?.trim();
+
+    // Validation functions
+    const isValidPhone = (num) => /^\+?\d{10,15}$/.test(num);
+    const isValidEmail = (mail) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+    const isValidName = (name) => /^[A-Za-z\s]+$/.test(name);
+
+    // Normalize phone format
+    if (phone) {
+      phone = phone.trim();
+      if (!phone.startsWith("+")) {
+        if (phone.startsWith("91")) {
+          phone = `+${phone}`;
+        } else {
+          phone = `+91${phone.replace(/^0+/, "")}`;
+        }
+      }
+    }
 
     const existingToken = localStorage.getItem("accessToken");
 
     if (!existingToken && phone && email && firstName && lastName) {
+      // Validate inputs 
+      if (!phone || !isValidPhone(phone)) {
+        console.error("❌ Invalid phone number format:", phone);
+        return;
+      }
+
+      if (!email || !isValidEmail(email)) {
+        console.error("❌ Invalid email format:", email);
+        return;
+      }
+
+      if (!firstName || !isValidName(firstName)) {
+        console.error("❌ Invalid first name:", firstName);
+        return;
+      }
+
+      if (!lastName || !isValidName(lastName)) {
+        console.error("❌ Invalid last name:", lastName);
+        return;
+      }
+      // console.log("Params received:", { phone, email, firstName, lastName });
       dispatch(registerLoginUser({ phone, email, firstName, lastName }));
+      navigate("/", { replace: true });
     }
-  }, [dispatch, i18n]);
+  }, [dispatch, i18n, searchParams, navigate]);
 
   return (
     <div>

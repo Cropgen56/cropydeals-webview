@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next"; // <-- add this import
+import { useTranslation } from "react-i18next"; 
 import bannerimage from "../../assets/backgroundbanner.png";
 import ProfileIcon from "../../assets/image/homepage/profile.svg";
 import farmerimage from "../../assets/image/homepage/farmerimage.png";
@@ -9,6 +9,7 @@ import Sidebar from "../sidebar/Sidebar";
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, loading } = useSelector((state) => state.auth);
+
   const { t } = useTranslation(); // <-- initialize translation
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
