@@ -30,9 +30,12 @@ const MemoizedFarmDetailsGrowthTimeline = memo(FarmDetailsGrowthTimeline);
 const MemoizedFarmDetailsCropProtection = memo(FarmDetailsCropProtection);
 const MemoizedFarmDetailsMarketPrice = memo(FarmDetailsMarketPrice);
 const MemoizedFarmDetailsCommunity = memo(FarmDetailsCommunity);
-import makePolygonCoordinates from "../utils/makePolygonCoordinates ";
+const MemoizedFarmDetailsPlantGrowth = memo(FarmDetailsPlantGrowth);
+
+import makePolygonCoordinates from "../utils/makePolygonCoordinates";
 import { formatToYYYYMMDD, getSixMonthsBefore } from "../utils/convertYYYYMMDD";
 import { createAOI, fetchAOIs } from "../redux/slices/weatherSlice";
+import FarmDetailsPlantGrowth from "../components/farm-details/FarmDetailsPlantGrowth";
 
 function FarmDetails() {
   const location = useLocation();
@@ -134,7 +137,8 @@ function FarmDetails() {
         <MemoizedFarmDetailsWeatherCard farm={farmData} />
         <MemoizedFarmDetailsGrowthTimeline farm={farmData} />
         <MemoizedFarmDetailsCropProtection farm={farmData} />
-        <MemoizedFarmDetailsMarketPrice farm={farmData} />
+        <MemoizedFarmDetailsPlantGrowth farm={farmData} />
+        {/* <MemoizedFarmDetailsMarketPrice farm={farmData} /> */}
         {/* <MemoizedFarmDetailsCommunity farm={farmData} /> */}
       </div>
     </div>

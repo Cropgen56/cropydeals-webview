@@ -54,7 +54,9 @@ export default function FarmMap({ coordinates = [] }) {
         center={center}
         zoom={15}
         className="w-full h-full z-0"
-        scrollWheelZoom={false}
+        scrollWheelZoom="center"
+        touchZoom={true}
+        doubleClickZoom={true}
         zoomControl={true}
       >
         <TileLayer

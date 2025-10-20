@@ -52,15 +52,13 @@ const UpdateFarmDetails = ({
       });
     }
   }, [centroid]);
-  
 
   const [field, setField] = useState({
     farmName: farmDetails?.fieldName || "",
     cropName: farmDetails?.cropName || "",
     sowingDate: farmDetails?.sowingDate || "",
     variety: farmDetails?.variety || "",
-    irrigation:
-      farmDetails?.typeOfIrrigation?.replace(/ /g, "-").toLowerCase() || "",
+    irrigation: farmDetails?.typeOfIrrigation || "",
     typeOfFarming: farmDetails?.typeOfFarming || "",
   });
 
@@ -119,6 +117,14 @@ const UpdateFarmDetails = ({
       }
     });
   };
+
+  // Helper to capitalize each word
+  const capitalizeWords = (str) =>
+    str
+      .toLowerCase()
+      .split(/[\s_]+/) // Split on space or underscore
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
 
   const handleDelete = () => {
     dispatch(deleteFarmField({ farmId: farmDetails?._id })).then(() => {
@@ -229,13 +235,8 @@ const UpdateFarmDetails = ({
                     [...crops]
                       .sort((a, b) => a.cropName.localeCompare(b.cropName))
                       .map((crop) => (
-                        <option key={crop._id} value={crop._id}>
-                          {t(
-                            `crops.${crop.cropName
-                              .toLowerCase()
-                              .replace(/\s/g, "_")}`,
-                            crop.cropName
-                          )}
+                        <option key={crop._id} value={crop.cropName}>
+                          {capitalizeWords(crop.cropName)}
                         </option>
                       ))}
                 </select>
@@ -290,13 +291,17 @@ const UpdateFarmDetails = ({
                   <option value="" disabled>
                     {t("select_irrigation")}
                   </option>
-                  <option value="drip-irrigation">
-                    {t("drip_irrigation")}
-                  </option>
-                  <option value="sprinkler">{t("sprinkler")}</option>
-                  <option value="open-irrigation">
-                    {t("open_irrigation")}
-                  </option>
+                  {["drip-irrigation", "sprinkler", "open-irrigation"].map(
+                    (val) => (
+                      <option key={val} value={val}>
+                        {val
+                          .replace(/-/g, " ")
+                          .split(" ")
+                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                          .join(" ")}
+                      </option>
+                    )
+                  )}
                 </select>
 
                 {/* Type of Farming */}

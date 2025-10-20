@@ -49,7 +49,10 @@ export const getCurrentLocation = ({ setLocation, retries = 3 }) => {
       console.error("Error fetching location:", err.message);
       if (retries > 0) {
         // Retry after 2 seconds
-        setTimeout(() => getCurrentLocation({ setLocation, retries: retries - 1 }), 2000);
+        setTimeout(
+          () => getCurrentLocation({ setLocation, retries: retries - 1 }),
+          2000
+        );
       }
     },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -59,8 +62,7 @@ export const getCurrentLocation = ({ setLocation, retries = 3 }) => {
 const AddFieldMap = ({ setIsSubmitting }) => {
   const data = useLocation();
   const farmDetails = data.state;
-  const { t } = useTranslation();  
-  
+  const { t } = useTranslation();
 
   const [markers, setMarkers] = useState([]);
   const [isAddingMarkers, setIsAddingMarkers] = useState(false);
@@ -206,7 +208,9 @@ const AddFieldMap = ({ setIsSubmitting }) => {
       return () => map.removeControl(searchControl);
     }, [map, onLocationSelect]);
 
-    return <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-[500px]"></div>;
+    return (
+      <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-[500px]"></div>
+    );
   };
 
   // Custom Leaflet bar style
@@ -255,7 +259,8 @@ const AddFieldMap = ({ setIsSubmitting }) => {
                 icon={yellowMarkerIcon}
               >
                 <Popup>
-                  {t("marker_at")} [{marker.lat.toFixed(4)}, {marker.lng.toFixed(4)}]
+                  {t("marker_at")} [{marker.lat.toFixed(4)},{" "}
+                  {marker.lng.toFixed(4)}]
                 </Popup>
               </Marker>
             ))}
@@ -269,11 +274,11 @@ const AddFieldMap = ({ setIsSubmitting }) => {
 
             <Markers />
             <SearchField onLocationSelect={setSelectedLocation} />
-            <CurrentLocationButton onLocationFound={setSelectedLocation} />
+            {/* <CurrentLocationButton onLocationFound={setSelectedLocation} /> */}
           </MapContainer>
 
           {/* Buttons */}
-          <div className="absolute top-[20vh] right-5 flex flex-col gap-5 z-[1100]">
+          {/* <div className="absolute top-[20vh] right-5 flex flex-col gap-5 z-[1100]">
             <button
               onClick={removeLastMarker}
               className="p-3 bg-[#075a53] text-white rounded-full"
@@ -297,6 +302,55 @@ const AddFieldMap = ({ setIsSubmitting }) => {
               className="p-3 bg-[#075a53] text-white rounded-full"
             >
               <DeleteFieldIcon />
+            </button>
+          </div> */}
+
+          <div className="absolute top-[20vh] right-5 flex flex-col gap-5 z-[1100]">
+            <button
+              onClick={removeLastMarker}
+              className="flex items-center justify-center p-3 bg-[#075a53] text-white rounded-full w-14 h-14"
+            >
+              <BackButtonIcon />
+            </button>
+
+            <button
+              onClick={() => setIsAddingMarkers(!isAddingMarkers)}
+              className="flex items-center justify-center p-3 bg-[#075a53] text-white rounded-full w-14 h-14"
+            >
+              <AddFieldIcon />
+            </button>
+
+            <button
+              onClick={toggleForm}
+              className="flex items-center justify-center p-3 bg-[#075a53] text-white rounded-full w-14 h-14"
+            >
+              <SaveIcon />
+            </button>
+
+            <button
+              onClick={clearMarkers}
+              className="flex items-center justify-center p-3 bg-[#075a53] text-white rounded-full w-14 h-14"
+            >
+              <DeleteFieldIcon />
+            </button>
+
+            <button
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                  const { latitude, longitude } = pos.coords;
+                  setSelectedLocation({
+                    lat: latitude,
+                    lng: longitude,
+                    name: "Current Location",
+                  });
+                });
+              }}
+              className="flex items-center justify-center p-3 bg-[#075a53] text-white rounded-full w-14 h-14"
+            >
+              <CurrentLocationIcon
+                CurrentLocationButton
+                onLocationFound={setSelectedLocation}
+              />
             </button>
           </div>
 

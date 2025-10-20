@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CalendarWhite from "../../assets/image/farm-details/calender.svg";
 import CalendarGreen from "../../assets/image/farm-details/calender-green.svg";
 import { useDispatch, useSelector } from "react-redux";
-import makePolygonCoordinates from "../../utils/makePolygonCoordinates ";
+import makePolygonCoordinates from "../../utils/makePolygonCoordinates";
 import { fetchIndexData } from "../../redux/slices/satelliteSlice";
 import { useTranslation } from "react-i18next";
 
