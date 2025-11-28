@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 function FarmDetailsCropInfo({ farm }) {
   const { t } = useTranslation();
 
+  const advisory = useSelector((state) => state.smartAdvisory?.advisory);
+  console.log(advisory);
   const { cropHealth, cropYield } = useSelector(
     (state) => state.satellite || {}
   );
@@ -101,7 +103,7 @@ function FarmDetailsCropInfo({ farm }) {
           </div>
           <div className="flex">
             <span className="text-xs sm:text-base font-bold text-[#344E41] w-1/2 sm:w-1/3">
-             {t("crop_age")}
+              {t("crop_age")}
             </span>
             <span className="text-xs sm:text-base font-semibold text-black">
               : {calculateDaysFromDate(farm?.sowingDate)} {t("days")}
