@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const BASE_URL = 'https://server.cropgenapp.com/v1';
-
+import apiClient from "../apiClient";
 
 // Async thunk for adding a new farm field
 export const addFarmField = createAsyncThunk(
@@ -22,20 +20,17 @@ export const addFarmField = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/field/add-field/${userId}`,
-        {
-          latlng,
-          userId,
-          cropName,
-          variety,
-          sowingDate,
-          typeOfIrrigation,
-          farmName,
-          acre,
-          typeOfFarming,
-        }
-      );
+      const response = await apiClient.post(`/api/field/add-field/${userId}`, {
+        latlng,
+        userId,
+        cropName,
+        variety,
+        sowingDate,
+        typeOfIrrigation,
+        farmName,
+        acre,
+        typeOfFarming,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -50,9 +45,7 @@ export const getFarmFields = createAsyncThunk(
   "farm/getFarmFields",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/field/get-field/${userId}`
-      );
+      const response = await apiClient.get(`/api/field/get-field/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -79,8 +72,8 @@ export const updateFarmField = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.patch(
-        `${BASE_URL}/api/field/update-field/${farmId}`,
+      const response = await apiClient.patch(
+        `/api/field/update-field/${farmId}`,
         {
           variety,
           sowingDate,
@@ -104,8 +97,8 @@ export const deleteFarmField = createAsyncThunk(
   "farm/deleteFarmField",
   async ({ farmId }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/api/field/delete-field/${farmId}`
+      const response = await apiClient.delete(
+        `/api/field/delete-field/${farmId}`
       );
       return response.data;
     } catch (error) {
@@ -177,7 +170,7 @@ const farmSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-        
+
       // Delete Farm Field
       .addCase(deleteFarmField.pending, (state) => {
         state.status = "loading";

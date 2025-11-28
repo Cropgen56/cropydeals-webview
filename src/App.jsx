@@ -22,7 +22,6 @@ function App() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-
   useEffect(() => {
     // const lang = "en";
     const lang = localStorage.getItem("language") || "en";
@@ -76,7 +75,7 @@ function App() {
         return;
       }
 
-       // Clear old token to replace with new login
+      // Clear old token to replace with new login
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
 

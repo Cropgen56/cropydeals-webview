@@ -1,18 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const LIST_API_URL = "https://server.cropgenapp.com/v1/api/crop/get-crop-list";
-const SINGLE_CROP_API_URL = "https://server.cropgenapp.com/v1/api/crop/get/";
+import apiClient from "../apiClient";
 
 export const fetchCrops = createAsyncThunk(
   "crops/fetchCrops",
   async (token, { rejectWithValue }) => {
     try {
-      const response = await axios.get(LIST_API_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient.get(`api/crop/get-crop-list`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
@@ -26,7 +19,7 @@ export const fetchCropById = createAsyncThunk(
   "crops/fetchCropById",
   async (cropId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${SINGLE_CROP_API_URL}${cropId}`);
+      const response = await apiClient.get(`/api/crop/get/${cropId}`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
