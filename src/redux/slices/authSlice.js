@@ -16,7 +16,7 @@ export const registerLoginUser = createAsyncThunk(
             email,
             firstName,
             lastName,
-            organizationCode: "TEST",
+            organizationCode: "CROPYDEALS",
             terms: true,
           }),
         }
