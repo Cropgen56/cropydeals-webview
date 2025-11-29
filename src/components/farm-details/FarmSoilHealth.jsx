@@ -1,84 +1,38 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { getNpkData } from "../../redux/slices/satelliteSlice";
+import React, { useMemo } from "react";
+import { useSelector, shallowEqual } from "react-redux";
 import NutrientBar from "./NutrientBar";
 import FertilizerRecommendation from "./fertilizerRecommendation";
-import { formatToYYYYMMDD } from "../../utils/convertYYYYMMDD";
 import { useTranslation } from "react-i18next";
 
 const NUTRIENT_CONFIG = [
-  { symbol: "N", label: "nitrogen", key: "N" },
-  { symbol: "P", label: "phosphorous", key: "P" },
-  { symbol: "K", label: "potassium", key: "K" },
+  { symbol: "N", label: "nitrogen", key: "nitrogenKgPerHa" },
+  { symbol: "P", label: "phosphorous", key: "phosphorousKgPerHa" },
+  { symbol: "K", label: "potassium", key: "potassiumKgPerHa" },
 ];
 
-const FarmDetailsSoilHealth = ({ farm }) => {
+const FarmDetailsSoilHealth = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const lastPayloadRef = useRef(null);
-
-  const aois = useSelector((state) => state.weather?.aois ?? [], shallowEqual);
-  const newNpkData = useSelector(
-    (state) => state.satellite?.newNpkData ?? {},
+  const advisory = useSelector(
+    (state) => state.smartAdvisory.advisory,
     shallowEqual
   );
-  const npkLoading = useSelector(
-    (state) => state.satellite?.isLoading?.newNpkData
-  );
 
-  const { cropName, sowingDate, field, _id: farmId } = farm;
-
-  const endDate = useMemo(() => formatToYYYYMMDD(new Date()), []);
-
-  const nutrientData = useMemo(() => {
-    const stageTarget = newNpkData?.data?.stage_target ?? {};
-    const estimatedUptake = newNpkData?.data?.estimated_uptake ?? {};
-
-    return NUTRIENT_CONFIG.map((n) => ({
-      symbol: n.symbol,
-      label: t(n.label),
-      current: estimatedUptake[n.key] || 0,
-      required: stageTarget[n.key] || 0,
-    }));
-  }, [newNpkData]);
-
-  const fertilizerPlan = useMemo(
-    () => newNpkData?.data?.fertilizer_plan ?? {},
-    [newNpkData]
-  );
-
-  // convert field to polygon coords
-  const convertFieldToCoordinates = (field = []) => {
-    if (!Array.isArray(field) || field.length === 0) return [];
-    const coords = field.map(({ lng, lat }) => [lng, lat]);
-    const first = coords[0];
-    const last = coords[coords.length - 1];
-    if (!last || first[0] !== last[0] || first[1] !== last[1])
-      coords.push(first);
-    return [coords];
+  const npkData = advisory?.npkManagement || {
+    available: { nitrogenKgPerHa: 0, phosphorousKgPerHa: 0, potassiumKgPerHa: 0 },
+    required: { nitrogenKgPerHa: 0, phosphorousKgPerHa: 0, potassiumKgPerHa: 0 },
+    recommendation: "",
   };
 
-  // Fetch NPK data
-  useEffect(() => {
-    if (!cropName || !sowingDate || !farmId || !aois.length) return;
-
-    const matchingAoi = aois.find((a) => a.name === farmId);
-    if (!matchingAoi?.id) return;
-
-    const payload = {
-      crop: cropName,
-      startDate: formatToYYYYMMDD(sowingDate),
-      endDate,
-      geometry_id: matchingAoi.id,
-      geometryCoords: convertFieldToCoordinates(field),
-    };
-
-    const payloadKey = JSON.stringify(payload);
-    if (lastPayloadRef.current === payloadKey) return;
-    lastPayloadRef.current = payloadKey;
-
-    dispatch(getNpkData(payload));
-  }, [cropName, sowingDate, farmId, aois, endDate, field, dispatch]);
+  const nutrientData = useMemo(
+    () =>
+      NUTRIENT_CONFIG.map((n) => ({
+        symbol: n.symbol,
+        label: t(n.label),
+        current: npkData.available[n.key] || 0,
+        required: npkData.required[n.key] || 0,
+      })),
+    [npkData, t]
+  );
 
   return (
     <section className="bg-white rounded-xl border border-[#E6EEF0] md:px-8 p-4 flex flex-col gap-4">
@@ -98,28 +52,22 @@ const FarmDetailsSoilHealth = ({ farm }) => {
       </div>
 
       <div className="flex flex-col gap-4">
-        {npkLoading ? (
-          <p>Loading...</p>
-        ) : (
-          nutrientData.map((n) => (
-            <NutrientBar
-              key={n.symbol}
-              symbol={n.symbol}
-              label={n.label}
-              current={n.current}
-              required={n.required}
-            />
-          ))
-        )}
+        {nutrientData.map((n) => (
+          <NutrientBar
+            key={n.symbol}
+            symbol={n.symbol}
+            label={n.label}
+            current={n.current}
+            required={n.required}
+          />
+        ))}
       </div>
 
       <FertilizerRecommendation
-        fertilizerPlan={fertilizerPlan || {}}
-        stageTarget={newNpkData?.data?.stage_target || {}}
       />
 
       <div className="bg-[#F8F8F8] border border-[#D9D9D9] rounded-xl p-3 text-sm text-[#344E41] font-medium">
-        {newNpkData?.data?.notes || t("noAdditionalFertilizer")}
+        {npkData.recommendation || t("noAdditionalFertilizer")}
       </div>
     </section>
   );

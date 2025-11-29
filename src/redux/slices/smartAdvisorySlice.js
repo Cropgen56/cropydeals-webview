@@ -24,9 +24,11 @@ export const runSmartAdvisory = createAsyncThunk(
 
 export const fetchSmartAdvisory = createAsyncThunk(
   "smartAdvisory/fetchSmartAdvisory",
-  async ({ fieldId }, thunkAPI) => {
+  async ({ fieldId, token }, thunkAPI) => {
     try {
-      const res = await apiClient.get(`${BASE_URL}/farm-adviosry/${fieldId}`);
+      const res = await axios.get(`${BASE_URL}/farm-adviosry/${fieldId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return res.data.advisories?.[0] || null;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || err.message);

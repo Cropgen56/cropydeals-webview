@@ -4,16 +4,21 @@ import FarmDetailsMap from "./FarmDetailsMap";
 import FarmDetailsIndex from "./FarmDetailsIndex";
 import Loading from "../common/Loader";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 function FarmDetailsCropHealth({ farm, loading }) {
   const { t } = useTranslation();
+  const adviosry = useSelector((state) => state.smartAdvisory.advisory);
+  
+  const cropHealthPercentage = adviosry?.cropHealth?.percentage ?? 0;
+
   return (
     <section className="w-full flex flex-col gap-2 relative">
       <div className="flex justify-between items-center px-6 py-2">
         <h2 className="text-xl font-bold text-[#075A53]">{t("crop_health")}</h2>
         <div className="flex items-center gap-2">
           <img src={increaseRate} alt="Increase Rate" className="w-5 h-5" />
-          <span className="text-[#28C878] font-semibold">0%</span>
+          <span className="text-[#28C878] font-semibold">{cropHealthPercentage}%</span>
         </div>
       </div>
 

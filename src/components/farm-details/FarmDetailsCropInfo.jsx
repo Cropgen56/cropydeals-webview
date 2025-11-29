@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import CropImg from "../../assets/image/farm-details/crop-img.svg";
 import FarmDetailsMetrics from "./FarmDetailsMetrics";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateAiYield } from "../../redux/slices/satelliteSlice";
 import { fetchCrops } from "../../redux/slices/cropSlice";
 import { useTranslation } from "react-i18next";
 
@@ -10,8 +9,9 @@ function FarmDetailsCropInfo({ farm }) {
   const { t } = useTranslation();
 
   const advisory = useSelector((state) => state.smartAdvisory?.advisory);
-  console.log(advisory);
-  const { cropHealth, cropYield } = useSelector(
+  const advisoryLoading = useSelector((state) => state.smartAdvisory.loading);
+
+  const { cropHealth } = useSelector(
     (state) => state.satellite || {}
   );
   const crops = useSelector((state) => state.crops.crops);
@@ -25,11 +25,22 @@ function FarmDetailsCropInfo({ farm }) {
     }
   }, [dispatch, crops]);
 
-  useEffect(() => {
-    if (farm?._id) {
-      dispatch(calculateAiYield({ farmDetails: farm, bbchStage: 89 }));
-    }
-  }, [dispatch, farm]);
+  const yieldData = {
+    standardYield:
+      advisory?.yield?.standardYield != null
+        ? `${advisory.yield.standardYield} ${advisory.yield.unit || ""}`
+        : "N/A",
+    aiYield:
+      advisory?.yield?.aiYield != null
+        ? `${advisory.yield.aiYield} ${advisory.yield.unit || ""}`
+        : "N/A",
+  };
+
+  // Crop health data
+  const cropHealthData = advisory?.cropHealth || {};
+  const healthPercent = cropHealthData.percentage || 0;
+  const healthStatus = cropHealthData.category || "-";
+  const recommendation = cropHealthData.recommendation || "";
 
   useEffect(() => {
     if (!farm) return;
@@ -43,9 +54,6 @@ function FarmDetailsCropInfo({ farm }) {
 
     setCropImage(match?.cropImage || CropImg);
   }, [crops, farm]);
-
-  const healthPercent = Number(cropHealth?.data?.Health_Percentage) || 0;
-  const healthStatus = cropHealth?.data?.Crop_Health || "-";
 
   const getHealthColor = (status) => {
     switch (status) {
@@ -114,7 +122,15 @@ function FarmDetailsCropInfo({ farm }) {
               {t("standard_yield")}
             </span>
             <span className="text-xs sm:text-base font-semibold text-black">
-              : {cropYield?.data?.standard_yield ?? t("na")}
+              : {advisoryLoading ? "Loading..." : yieldData.standardYield}
+            </span>
+          </div>
+          <div className="flex">
+            <span className="text-xs sm:text-base font-bold text-[#344E41] w-1/2 sm:w-1/3">
+              Ai Yield
+            </span>
+            <span className="text-xs sm:text-base font-semibold text-black">
+              : {advisoryLoading ? "Loading..." : yieldData.aiYield}
             </span>
           </div>
           <div className="flex">
@@ -157,6 +173,14 @@ function FarmDetailsCropInfo({ farm }) {
             style={{ width: `${healthPercent}%`, backgroundColor: healthColor }}
           ></div>
         </div>
+
+        {recommendation && (
+          <div className="border-l-4 border-[#36A534] bg-[#F0FDF4] p-3 rounded-md mt-2">
+            <p className="text-sm text-[#344E41]">
+              {recommendation}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

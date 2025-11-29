@@ -33,8 +33,6 @@ const Homepage = () => {
         <MandiRate />
       </div>
 
-
-
     </div>
   );
 };
