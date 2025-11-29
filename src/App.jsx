@@ -16,7 +16,10 @@ import Cropinformation from "./components/cropinformation/Cropinformation";
 import CropInfoDynamic from "./components/cropinformation/Cropinfo";
 import Profile from "./pages/Profile";
 
+import { decodeJwt } from "./utils/tokenutils";
+
 const AUTH_QUERY_CACHE_KEY = "lastAuthQueryParams";
+const AUTH_TOKEN_CACHE_KEY = "lastAuthToken";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +38,136 @@ function App() {
     i18n.changeLanguage(lang);
     localStorage.setItem("language", lang);
 
-    // ---- READ QUERY PARAMS ----
+    const showError = (msg) => {
+      console.error(msg);
+      setErrorModal({
+        open: true,
+        message: msg,
+      });
+    };
+
+    // ---- TRY TOKEN-BASED FLOW FIRST ----
+    const token = searchParams.get("token")?.trim() || "";
+
+    if (token) {
+      // Avoid re-processing the same token
+      try {
+        const cachedToken = sessionStorage.getItem(AUTH_TOKEN_CACHE_KEY);
+        if (cachedToken && cachedToken === token) {
+          return;
+        }
+      } catch (err) {
+        console.warn("Failed to read cached auth token:", err);
+      }
+
+      let decoded;
+      try {
+        decoded = decodeJwt(token);
+      } catch (err) {
+        showError("Invalid or expired token. Please try again.");
+        return;
+      }
+
+      // Expecting these fields from backend token payload
+      let { phone, email, firstName, lastName, organizationCode, terms } =
+        decoded || {};
+
+      // Basic validations
+      if (!phone || !organizationCode) {
+        showError("Invalid token payload: missing phone or organization code.");
+        return;
+      }
+
+      // ---- NORMALIZE PHONE ----
+      const normalizePhone = (raw) => {
+        if (!raw) return "";
+        let p = String(raw).trim();
+
+        // If already in +91XXXXXXXXXX format
+        if (p.startsWith("+91")) return p;
+
+        // If starts with 91 but without +
+        if (p.startsWith("91")) {
+          return `+${p}`;
+        }
+
+        // Remove leading zeros and add +91
+        p = p.replace(/^0+/, "");
+
+        // If user added some other country code like +1, keep as-is
+        if (p.startsWith("+") && !p.startsWith("+91")) {
+          return p;
+        }
+
+        // Default: treat as Indian local number and prefix +91
+        return `+91${p}`;
+      };
+
+      phone = normalizePhone(phone);
+
+      const isValidPhone = (num) => /^\+?\d{10,15}$/.test(num);
+      const isValidEmail = (mail) =>
+        !mail || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+      const isValidName = (name) => !name || /^[A-Za-z\s]+$/.test(String(name));
+
+      if (!isValidPhone(phone)) {
+        showError("Invalid phone number in token payload.");
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showError("Invalid email in token payload.");
+        return;
+      }
+
+      if (!isValidName(firstName) || !isValidName(lastName)) {
+        showError("Invalid name in token payload.");
+        return;
+      }
+
+      const currentPayload = {
+        phone,
+        email: email || "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        organizationCode,
+        terms: terms === true || terms === "true",
+      };
+
+      // ---- CLEAR OLD AUTH ----
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
+
+      const processAuthWithToken = async () => {
+        try {
+          await dispatch(registerLoginUser(currentPayload)).unwrap();
+
+          // cache token on success
+          sessionStorage.setItem(AUTH_TOKEN_CACHE_KEY, token);
+
+          navigate("/", { replace: true });
+        } catch (err) {
+          console.error("Register/Login with token failed:", err);
+
+          const apiMessage =
+            typeof err === "string"
+              ? err
+              : err?.message ||
+                err?.error ||
+                "Something went wrong while registering. Please try again.";
+
+          setErrorModal({
+            open: true,
+            message: apiMessage,
+          });
+        }
+      };
+
+      processAuthWithToken();
+      return; // do not run the old query-param flow if token is present
+    }
+
+    // ---- FALLBACK: OLD QUERY PARAM FLOW (phone, email, firstName, lastName) ----
     let phone = searchParams.get("phone")?.trim() || "";
     const email = searchParams.get("email")?.trim() || "";
     const firstName = searchParams.get("firstName")?.trim() || "";
@@ -71,18 +203,9 @@ function App() {
 
     phone = normalizePhone(phone);
 
-    // ---- VALIDATIONS ----
     const isValidPhone = (num) => /^\+?\d{10,15}$/.test(num);
     const isValidEmail = (mail) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
     const isValidName = (name) => /^[A-Za-z\s]+$/.test(name);
-
-    const showError = (msg) => {
-      console.error(msg);
-      setErrorModal({
-        open: true,
-        message: msg,
-      });
-    };
 
     if (!isValidPhone(phone)) {
       showError("Invalid phone number. Please check the number and try again.");
@@ -129,19 +252,15 @@ function App() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
 
-    // ---- CALL REGISTER/LOGIN API ----
-    const processAuth = async () => {
+    const processAuthWithQuery = async () => {
       try {
-        // unwrap() will throw if the thunk was rejected
         await dispatch(registerLoginUser(currentPayload)).unwrap();
 
-        // Only cache params on successful auth
         sessionStorage.setItem(
           AUTH_QUERY_CACHE_KEY,
           JSON.stringify(currentPayload)
         );
 
-        // On success, go to homepage
         navigate("/", { replace: true });
       } catch (err) {
         console.error("Register/Login failed:", err);
@@ -160,7 +279,7 @@ function App() {
       }
     };
 
-    processAuth();
+    processAuthWithQuery();
   }, [dispatch, i18n, searchParams, navigate]);
 
   return (
