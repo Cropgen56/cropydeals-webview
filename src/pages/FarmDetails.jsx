@@ -35,6 +35,25 @@ const MemoizedFarmDetailsGrowthTimeline = memo(FarmDetailsGrowthTimeline);
 const MemoizedFarmDetailsCropProtection = memo(FarmDetailsCropProtection);
 const MemoizedFarmDetailsPlantGrowth = memo(FarmDetailsPlantGrowth);
 
+const lastRunKeyFor = (fieldId) => `lastSmartAdvisoryRun_${fieldId}`;
+
+function getLastRunTimestamp(fieldId) {
+  try {
+    const v = localStorage.getItem(lastRunKeyFor(fieldId));
+    return v ? Number(v) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function setLastRunTimestamp(fieldId, ts = Date.now()) {
+  try {
+    localStorage.setItem(lastRunKeyFor(fieldId), String(ts));
+  } catch {}
+}
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
 function FarmDetails() {
   const location = useLocation();
   const farmData = location.state?.farm;
@@ -94,57 +113,68 @@ function FarmDetails() {
         geometry: { type: "Polygon", coordinates: [coords] },
       };
 
-      const aoisResponse = await dispatch(fetchAOIs());
-      const list = aoisResponse.payload || [];
+      const resp = await dispatch(fetchAOIs());
+      const list = resp.payload || [];
+
       const exists = list.find((a) => a.name === payload.name);
 
-      if (!exists) await dispatch(createAOI(payload));
+      if (!exists) {
+        await dispatch(createAOI(payload));
+        await dispatch(fetchAOIs());
+      }
     })();
   }, [dispatch, farmData]);
 
-  /* ----------------------------------------
-      3. Fetch Smart Advisory
-  ----------------------------------------*/
   useEffect(() => {
-    if (!farmData) return;
-    dispatch(fetchSmartAdvisory({ fieldId: farmData._id }));
-  }, [dispatch, farmData]);
+    if (!farmData?._id) return;
 
-  /* ----------------------------------------
-      4. Run Smart Advisory once per week
-  ----------------------------------------*/
+    dispatch(fetchSmartAdvisory({ fieldId: farmData._id }))
+      .unwrap()
+      .catch(() => {});
+  }, [dispatch, farmData?._id]);
+
+  const authToken = localStorage.getItem("accessToken");
+
+  // console.log("AOIs :", aois);
+  // console.log("Farm ID:", farmData?._id);
+  // console.log("Farm :", farmData);
+
+  // console.log("Token:", authToken);
+
   useEffect(() => {
-    if (!farmData || !aois.length) return;
+    if (!farmData || !authToken || aois.length === 0) return;
 
-    const aoi = aois.find((x) => x.name === farmData._id);
-    if (!aoi) return;
+    const matchingAOI = aois.find((a) => a.name === farmData._id);
+    if (!matchingAOI || !matchingAOI.id) return;
 
-    const lastRunKey = `smart_adv_last_run_${farmData._id}`;
-    const lastRun = Number(localStorage.getItem(lastRunKey) || 0);
+    const geoId = matchingAOI.id;
+    const fieldId = farmData._id;
+
+    const lastTs = getLastRunTimestamp(fieldId);
     const now = Date.now();
 
-    const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-    if (now - lastRun < WEEK_MS) return;
+    // run only once every 7 days
+    if (lastTs && now - lastTs < WEEK_MS) return;
 
-    (async () => {
-      console.log("vishla");
-      await dispatch(
-        runSmartAdvisory({
-          fieldId: farmData._id,
-          geometryId: aoi.id,
-          targetDate: new Date().toISOString().split("T")[0],
-          language: "en",
-        })
-      );
+    const payload = {
+      fieldId,
+      geometryId: geoId,
+      targetDate: new Date().toISOString().split("T")[0],
+      language: "en",
+      token: authToken,
+    };
 
-      localStorage.setItem(lastRunKey, now.toString());
-      dispatch(fetchSmartAdvisory({ fieldId: farmData._id }));
-    })();
-  }, [aois, farmData, dispatch]);
+    dispatch(runSmartAdvisory(payload))
+      .unwrap()
+      .then(() => {
+        setLastRunTimestamp(fieldId);
+        dispatch(fetchSmartAdvisory({ fieldId, token: authToken })).catch(
+          () => {}
+        );
+      })
+      .catch(() => {});
+  }, [farmData, aois, authToken, dispatch]);
 
-  /* ----------------------------------------
-      5. UI
-  ----------------------------------------*/
   if (!farmData) {
     return (
       <div className="flex items-center justify-center min-h-screen">

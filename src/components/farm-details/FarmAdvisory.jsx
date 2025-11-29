@@ -1,194 +1,33 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { ChevronRight } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { resetAdvisory, generateAdvisory } from "../../redux/slices/satelliteSlice";
+import React, { useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-function FarmAdvisory({ farm, SoilMoisture }) {
-  const [language, setLanguage] = useState("en");
-  const [isLanguageLoading, setIsLanguageLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const dispatch = useDispatch();
-  const { Advisory, cropGrowthStage, isLoading } = useSelector(state => state.satellite);
-  const { forecastData } = useSelector(state => state.weather);
+function FarmAdvisory({ farm }) {
+  const { advisory, loading } = useSelector(state => state.smartAdvisory);
   const { t } = useTranslation();
 
-  const bbchStage = cropGrowthStage?.finalStage?.bbch;
-  const currentWeather = forecastData?.current;
-
-  // Load language from localStorage
-  useEffect(() => {
-    try {
-      const storedLang = localStorage.getItem("language") || "en";
-      setLanguage(storedLang);
-      if (!storedLang) localStorage.setItem("language", "en");
-    } catch {
-      setLanguage("en");
-    } finally {
-      setIsLanguageLoading(false);
-    }
-  }, []);
-
-  // Dispatch advisory API when farm, weather, language are ready
-  useEffect(() => {
-  if (!farm?._id || !forecastData?.current || !language) return;
-
-  setCurrentIndex(0);
-
-  dispatch(
-    generateAdvisory({
-      farmDetails: farm,
-      currentWeather: forecastData.current,
-      SoilMoisture: SoilMoisture || {},
-      bbchStage,
-      language,
-    })
-  );
-}, [farm, forecastData, language, SoilMoisture, bbchStage, dispatch]);
-
-
-  // Key mapping
-  const keyMap = {
-    // English
-    'Disease Pest': 'disease_pest',
-    Spray: 'spray',
-    Fertigation: 'fertigation',
-    Water: 'water',
-    Monitoring: 'monitoring',
-    // Hindi
-    'रोग और कीट': 'disease_pest',
-    छिड़काव: 'spray',
-    'उर्वरक सिंचाई': 'fertigation',
-    पानी: 'water',
-    निगरानी: 'monitoring',
-    // Marathi
-    'रोग कीटक': 'disease_pest',
-    फवारणी: 'spray',
-    फर्टिगेशन: 'fertigation',
-    पाणी: 'water',
-    निरीक्षण: 'monitoring',
-    // French
-    'Maladie et ravageurs': 'disease_pest',
-    Pulvérisation: 'spray',
-    Fertigation: 'fertigation', // Often same as English
-    Eau: 'water',
-    Surveillance: 'monitoring',
-    // Gujarati
-    'રોગ અને જીવાત': 'disease_pest',
-    છંટકાવ: 'spray',
-    ફર્ટિગેશન: 'fertigation',
-    પાણી: 'water',
-    નિરીક્ષણ: 'monitoring',
-    // Bengali
-    'রোগ ও পোকা': 'disease_pest',
-    স্প্রে: 'spray',
-    ফার্টিগেশন: 'fertigation',
-    জল: 'water',
-    পর্যবেক্ষণ: 'monitoring',
-    // Tamil
-    'நோய் மற்றும் பூச்சி': 'disease_pest',
-    தெளிப்பு: 'spray',
-    ஃபர்டிகேஷன்: 'fertigation',
-    தண்ணீர்: 'water',
-    கண்காணிப்பு: 'monitoring',
-    // Urdu
-    'بیماری اور کیڑے': 'disease_pest',
-    اسپرے: 'spray',
-    فرٹیگیشن: 'fertigation',
-    پانی: 'water',
-    نگرانی: 'monitoring',
-    // German
-    'Krankheit und Schädlinge': 'disease_pest',
-    Sprühen: 'spray',
-    Fertigation: 'fertigation', // Often same as English
-    Wasser: 'water',
-    Überwachung: 'monitoring',
-    // Spanish
-    'Enfermedad y plagas': 'disease_pest',
-    Rociar: 'spray',
-    Fertirrigación: 'fertigation',
-    Agua: 'water',
-    Monitoreo: 'monitoring',
-  };
-
-  // Parse advisory text
   const advisoryArray = useMemo(() => {
-    if (!Advisory?.advisory) return [];
+    return advisory?.smartAdvisory?.weeklyAdvisory?.items || [];
+  }, [advisory]);
 
-    const dayBlocks = Advisory.advisory
-      .trim()
-      .split(/\n\s*\n/)
-      .filter(day =>
-        day.trim().match(/^(?:\*\*)?(DAY|दिवस|Jour|દિવસ|দিন|நாள்|دن|Tag|Día)\s*\d+/i)
-      );
-
-    return dayBlocks.map(dayText => {
-      const lines = dayText.split("\n").filter(line => line.trim());
-      const dayMatch = lines[0].match(
-        /(?:\*\*)?(?:DAY|दिवस|Jour|દિવસ|দিন|நாள்|دن|Tag|Día)\s*(\d+)/i
-      );
-      const day = dayMatch ? `Day ${dayMatch[1]}` : "Unknown Day";
-      const dayData = { day };
-
-      lines.slice(1).forEach(line => {
-        const [key, ...value] = line.split(" - ");
-        if (key && value.length > 0) {
-          const cleanedValue = value.join(" - ").trim().replace(/\[|\]/g, "").trim();
-          const mappedKey = keyMap[key.trim()] || key.trim().toLowerCase().replace(/\s+/g, "_");
-          dayData[mappedKey] = cleanedValue;
-        }
-      });
-
-      return dayData;
-    });
-  }, [Advisory?.advisory]);
-
-  const handleNext = useCallback(() => {
-    setCurrentIndex(i => (i < advisoryArray.length - 1 ? i + 1 : 0));
-  }, [advisoryArray.length]);
-
-  // Show loading if API is in progress or language is loading
-  const loading = isLanguageLoading || isLoading?.Advisory;
   if (loading) return <p>{t("loading_advisory")}</p>;
-
-  // Show message if advisory is empty
-  if (advisoryArray.length === 0) return <p>{t("no_advisory_available")}</p>;
-
-  const current = advisoryArray[currentIndex];
-  const keys = ["disease_pest", "spray", "fertigation", "water", "monitoring"];
+  if (!advisoryArray.length) return <p>{t("no_advisory_available")}</p>;
 
   return (
     <section className="w-full bg-white border border-[#D9D9D9] rounded-xl md:px-8 p-4 flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-base sm:text-xl font-bold text-[#075A53]">{current.day}</h2>
-        <button
-          onClick={handleNext}
-          className="w-8 h-8 flex items-center justify-center rounded-full bg-[#075A5380] hover:bg-[#075A53] transition-all duration-500 ease-in-out cursor-pointer"
+      <h2 className="text-lg sm:text-xl font-bold text-[#075A53]">Weekly Advisory</h2>
+
+      {advisoryArray.map((item, index) => (
+        <div
+          key={index}
+          className="border border-[#075A53] bg-[#F8F8F8] rounded-lg p-4"
         >
-          <ChevronRight className="text-white w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="border border-[#075A53] bg-[#F8F8F8] rounded-lg p-4">
-        {keys.map(key =>
-          current[key] ? (
-            <div key={key} className="mb-3">
-              <p className="text-[#075A53] text-sm font-bold capitalize">{t(key)}</p>
-              <p className="text-[#263238] text-sm leading-5">{current[key]}</p>
-            </div>
-          ) : null
-        )}
-      </div>
-
-      <div className="flex justify-center gap-2 mt-2">
-        {advisoryArray.map((_, i) => (
-          <div
-            key={i}
-            className={`w-2 h-2 rounded-full ${i === currentIndex ? "bg-[#075A53]" : "bg-[#D9D9D9]"}`}
-          />
-        ))}
-      </div>
+          <p className="text-[#075A53] text-sm font-bold capitalize">
+            {item.key.replace(/_/g, " ")}
+          </p>
+          <p className="text-[#263238] text-sm leading-5">{item.advice}</p>
+        </div>
+      ))}
     </section>
   );
 }
