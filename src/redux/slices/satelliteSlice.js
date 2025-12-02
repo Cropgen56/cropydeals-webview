@@ -53,7 +53,12 @@ export const fetchDatesData = createAsyncThunk(
       }
       const response = await axios.post(
         `${SATELLITE_API}/v4/api/availability/`,
-        availabilityPayload
+        availabilityPayload,
+        {
+          headers: {
+            "x-api-key": process.env.REACT_APP_SATELLITE_API,
+          },
+        }
       );
       return response?.data ?? null;
     } catch (error) {
@@ -136,7 +141,12 @@ export const generateAdvisory = createAsyncThunk(
       };
       const response = await axios.post(
         `${SATELLITE_API}/generate-advisory-crop`,
-        payload
+        payload,
+        {
+          headers: {
+            "x-api-key": process.env.REACT_APP_SATELLITE_API,
+          },
+        }
       );
       return response?.data ?? null;
     } catch (error) {
@@ -176,7 +186,12 @@ export const fetchIndexData = createAsyncThunk(
 
       const response = await axios.post(
         `${SATELLITE_API}/v4/api/calculate/index`,
-        payload
+        payload,
+        {
+          headers: {
+            "x-api-key": process.env.REACT_APP_SATELLITE_API,
+          },
+        }
       );
       return response?.data ?? null;
     } catch (error) {
