@@ -36,7 +36,7 @@ export default function FarmMap({ coordinates = [] }) {
         coordinates.reduce((sum, c) => sum + c.lng, 0) / coordinates.length;
       return [lat, lng];
     }
-    return [28.6139, 77.209]; // default (Delhi)
+    return [28.6139, 77.209];
   }, [coordinates]);
 
   // Compute bounds for image overlay

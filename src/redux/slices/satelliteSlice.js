@@ -47,6 +47,7 @@ const initialState = {
 export const fetchDatesData = createAsyncThunk(
   "satellite/fetchDatesData",
   async (availabilityPayload, { rejectWithValue }) => {
+    console.log(import.meta.env.VITE_SATELLITE_API);
     try {
       if (!availabilityPayload) {
         return rejectWithValue({ message: "Geometry is missing" });
@@ -56,7 +57,7 @@ export const fetchDatesData = createAsyncThunk(
         availabilityPayload,
         {
           headers: {
-            "x-api-key": process.env.REACT_APP_SATELLITE_API,
+            "x-api-key": import.meta.env.VITE_SATELLITE_API,
           },
         }
       );
@@ -189,7 +190,7 @@ export const fetchIndexData = createAsyncThunk(
         payload,
         {
           headers: {
-            "x-api-key": process.env.REACT_APP_SATELLITE_API,
+            "x-api-key": import.meta.env.VITE_SATELLITE_API,
           },
         }
       );
