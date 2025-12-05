@@ -369,6 +369,7 @@ const AddFieldDetails = ({
                     <option value="Organic">{t("organic")}</option>
                     <option value="Inorganic">{t("inorganic")}</option>
                     <option value="Integrated">{t("integrated")}</option>
+                    <option value="Integrated">{t("gap")}</option>
                   </select>
                 </div>
               </div>
